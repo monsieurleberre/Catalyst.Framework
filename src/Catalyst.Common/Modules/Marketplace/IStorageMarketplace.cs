@@ -28,6 +28,7 @@ namespace Catalyst.Common.Modules.Marketplace
 {
     public interface IStorageMarketplace
     {
+        /// <summary>The list of storage nodes in the marketplace.</summary>
         IList<IPeerIdentifier> StorageNodes { get; set; }
     }
 }

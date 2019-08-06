@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.P2P;
 using Ipfs;
 
 namespace Catalyst.Common.Modules.Marketplace
@@ -28,7 +29,7 @@ namespace Catalyst.Common.Modules.Marketplace
     public interface IBlockChallenge
     {
         Cid MainFileCid { get; set; }
-
         Cid[] BlockCid { get; set; }
+        IPeerIdentifier RecipientPeerIdentifier { get; set; }
     }
 }
