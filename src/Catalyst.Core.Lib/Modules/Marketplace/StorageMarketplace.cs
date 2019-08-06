@@ -3,7 +3,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.P2P;
 
-namespace Catalyst.Common.Modules.Marketplace
+namespace Catalyst.Core.Lib.Modules.Marketplace
 {
     public sealed class StorageMarketplace : IStorageMarketplace
     {

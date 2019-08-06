@@ -70,6 +70,9 @@ namespace Catalyst.Modules.Lib.Dfs
             _fileSystem = fileSystem;
         }
 
+        public Task<string[]> GetFileBlockCids(string fileCid) { throw new System.NotImplementedException(); }
+        public Task<Stream> GetBlockAsync(string blockId, CancellationToken cancellationToken = default) { throw new System.NotImplementedException(); }
+
         /// <inheritdoc />
         public async Task<string> AddTextAsync(string utf8Content, CancellationToken cancellationToken = default)
         {

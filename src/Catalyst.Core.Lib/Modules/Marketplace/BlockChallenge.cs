@@ -23,12 +23,19 @@
 
 using Catalyst.Common.Interfaces.Modules.Marketplace;
 
-namespace Catalyst.Common.Modules.Marketplace
+namespace Catalyst.Core.Lib.Modules.Marketplace
 {
     public class BlockChallenge : IBlockChallenge
     {
         public string ChallengeSalt { get; set; }
         public string MainFileCid { get; set; }
         public string[] BlockChallengeCids { get; set; }
+
+        public override int GetHashCode()
+        {
+            return ChallengeSalt.GetHashCode() + 
+                MainFileCid.GetHashCode() + 
+                BlockChallengeCids.GetHashCode();
+        }
     }
 }
