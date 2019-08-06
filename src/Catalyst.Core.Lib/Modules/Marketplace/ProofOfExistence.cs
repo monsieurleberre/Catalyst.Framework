@@ -101,7 +101,7 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
                 return false;
             }
 
-            _challengeAnswers.TryGetValue(challenge, out string expectedAnswer);
+            _challengeAnswers.TryGetValue(challenge, out var expectedAnswer);
 
             if (string.IsNullOrWhiteSpace(expectedAnswer))
             {
