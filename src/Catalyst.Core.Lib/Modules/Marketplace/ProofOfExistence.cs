@@ -147,7 +147,9 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
 
         public async Task IncomingChallenge(IPeerIdentifier senderPeerIdentifier, IBlockChallenge challenge)
         {
-            var 
+            var answer = await Answer(senderPeerIdentifier, challenge);
+
+            // TODO: Send answer
         }
     }
 }
