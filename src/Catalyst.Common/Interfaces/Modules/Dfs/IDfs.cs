@@ -24,6 +24,7 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Ipfs;
 
 namespace Catalyst.Common.Interfaces.Modules.Dfs
 {
@@ -32,6 +33,10 @@ namespace Catalyst.Common.Interfaces.Modules.Dfs
     /// </summary>
     public interface IDfs
     {
+        Task<string[]> GetFileBlockCids(string fileCid);
+
+        Task<Stream> GetBlockAsync(string blockId, CancellationToken cancellationToken = default);
+
         /// <summary>
         /// Add some text to the distributed file system.
         /// </summary>

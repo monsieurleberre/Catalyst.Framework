@@ -21,14 +21,9 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
 
-namespace Catalyst.Common.Modules.Marketplace
+namespace Catalyst.Common.Interfaces.Repository
 {
-    public interface IStorageMarketplace
-    {
-        /// <summary>The list of storage nodes in the marketplace.</summary>
-        IList<IPeerIdentifier> StorageNodes { get; set; }
-    }
+    public interface IStorageNodeRepository : IRepositoryWrapper<Peer> { }
 }

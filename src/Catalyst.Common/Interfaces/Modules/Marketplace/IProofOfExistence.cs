@@ -21,15 +21,17 @@
 
 #endregion
 
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.P2P;
-using Ipfs;
 
-namespace Catalyst.Common.Modules.Marketplace
+namespace Catalyst.Common.Interfaces.Modules.Marketplace
 {
-    public interface IBlockChallenge
+    public interface IProofOfExistence
     {
-        Cid MainFileCid { get; set; }
-        Cid[] BlockCid { get; set; }
-        IPeerIdentifier RecipientPeerIdentifier { get; set; }
+        Task Send(IPeerIdentifier recipientPeerIdentifier, string fileCid);
+
+        void Verify(IBlockChallengeResponse challengeResponse);
+
+        Task IncomingChallenge(IPeerIdentifier senderPeerIdentifier, IBlockChallenge challenge);
     }
 }

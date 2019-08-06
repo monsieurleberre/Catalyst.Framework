@@ -21,12 +21,14 @@
 
 #endregion
 
-namespace Catalyst.Common.Modules.Marketplace
-{
-    public interface IProofOfExistence
-    {
-        void Send(IBlockChallenge challenge);
+using Catalyst.Common.Interfaces.P2P;
 
-        void Verify(IBlockChallengeResponse challengeResponse);
+namespace Catalyst.Common.Interfaces.Modules.Marketplace
+{
+    public interface IBlockChallenge
+    {
+        string ChallengeSalt { get; set; }
+        string MainFileCid { get; set; }
+        string[] BlockChallengeCids { get; set; }
     }
 }

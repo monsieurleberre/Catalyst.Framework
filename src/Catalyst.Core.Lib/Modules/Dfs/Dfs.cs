@@ -49,6 +49,14 @@ namespace Catalyst.Core.Lib.Modules.Dfs
             _logger = logger;
         }
 
+        public Task<string[]> GetFileBlockCids(string fileCid) => Task.FromResult(new string[] {"TODO"});
+
+        public async Task<Stream> GetBlockAsync(string blockId, CancellationToken cancellationToken = default)
+        {
+            var block = await _ipfs.Block.GetAsync(Cid.Decode(blockId), cancellationToken);
+            return block.DataStream;
+        }
+
         /// <inheritdoc />
         public async Task<string> AddTextAsync(string content, CancellationToken cancellationToken = default)
         {
