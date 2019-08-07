@@ -28,7 +28,7 @@ namespace Catalyst.Common.Interfaces.Modules.Marketplace
 {
     public interface IProofOfExistence
     {
-        Task Send(IPeerIdentifier recipientPeerIdentifier, string fileCid);
+        Task<IBlockChallenge> Send(IPeerIdentifier recipientPeerIdentifier, string fileCid);
 
         bool Verify(IPeerIdentifier from, IBlockChallenge challenge, string answer);
 

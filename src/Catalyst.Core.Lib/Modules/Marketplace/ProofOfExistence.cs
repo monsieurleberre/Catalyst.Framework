@@ -66,7 +66,7 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
             _peerIdentifier = peerIdentifier;
         }
 
-        public async Task Send(IPeerIdentifier recipientPeerIdentifier, string fileCid)
+        public async Task<IBlockChallenge> Send(IPeerIdentifier recipientPeerIdentifier, string fileCid)
         {
             var latestDeltaHash = _deltaHashProvider.GetLatestDeltaHash(DateTime.UtcNow);
             var blockCids = await _dfs.GetFileBlockCids(fileCid);
@@ -79,7 +79,7 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
             if (!blocksToCheck.Any())
             {
                 _logger.Error("No blocks to check for " + fileCid);
-                return;
+                return null;
             }
 
             var challenge = new BlockChallenge
@@ -94,10 +94,12 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
             if (_challengeAnswers.ContainsKey(challenge))
             {
                 _logger.Information("Awaiting challenge: " + challenge.MainFileCid);
-                return;
+                return null;
             }
 
             _challengeAnswers.GetOrAdd(challenge, answer);
+
+            return challenge;
 
             // TODO: Send Challenge
         }
@@ -144,7 +146,7 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
                         var salt = System.Text.Encoding.UTF8.GetBytes(challenge.ChallengeSalt);
                         var peerSalt = challengerPeerIdentifier.PeerId.ToByteArray();
 
-                        blockStream.CopyTo(blockStream);
+                        blockStream.CopyTo(ms);
                         ms.Write(salt);
                         ms.Write(peerSalt);
                     }
