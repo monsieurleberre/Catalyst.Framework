@@ -29,6 +29,6 @@ namespace Catalyst.Common.Interfaces.Modules.Marketplace
     {
         string ChallengeSalt { get; set; }
         string MainFileCid { get; set; }
-        string[] BlockChallengeCids { get; set; }
+        int[] BlockChallengeCidIdx { get; set; }
     }
 }

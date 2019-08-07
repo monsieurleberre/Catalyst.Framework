@@ -50,11 +50,11 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
 
         private int BlockTestPercentage => 20;
 
-        public ProofOfExistence(ILogger logger, 
-            IPeerClient peerClient, 
-            IPeerIdentifier peerIdentifier, 
-            IDfs dfs, 
-            IDeltaHashProvider deltaHashProvider, 
+        public ProofOfExistence(ILogger logger,
+            IPeerClient peerClient,
+            IPeerIdentifier peerIdentifier,
+            IDfs dfs,
+            IDeltaHashProvider deltaHashProvider,
             IMultihashAlgorithm multihashAlgorithm)
         {
             _logger = logger;
@@ -71,16 +71,25 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
             var latestDeltaHash = _deltaHashProvider.GetLatestDeltaHash(DateTime.UtcNow);
             var blockCids = await _dfs.GetFileBlockCids(fileCid);
             var minimumBlocksToCheck = Math.Max(1, blockCids.Length * (BlockTestPercentage / 100));
-            var blocksToCheck = blockCids.Shuffle().Take(minimumBlocksToCheck).ToArray();
+            var blocksToCheck = blockCids
+               .Select((cid, index) => new {index, cid})
+               .Shuffle().Take(minimumBlocksToCheck)
+               .Select(p => p.index).ToArray();
+
+            if (!blocksToCheck.Any())
+            {
+                _logger.Error("No blocks to check for " + fileCid);
+                return;
+            }
 
             var challenge = new BlockChallenge
             {
                 MainFileCid = fileCid,
                 ChallengeSalt = latestDeltaHash,
-                BlockChallengeCids = blocksToCheck
+                BlockChallengeCidIdx = blocksToCheck
             };
-            
-            var answer = await Answer(_peerIdentifier, challenge);
+
+            var answer = await Answer(_peerIdentifier, challenge, blockCids);
 
             if (_challengeAnswers.ContainsKey(challenge))
             {
@@ -121,17 +130,19 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
             return true;
         }
 
-        private async Task<string> Answer(IPeerIdentifier senderPeerIdentifier, IBlockChallenge challenge)
+        public async Task<string> Answer(IPeerIdentifier challengerPeerIdentifier, IBlockChallenge challenge, string[] blockCids = null)
         {
             Multihash answer;
+            blockCids = blockCids ?? await _dfs.GetFileBlockCids(challenge.MainFileCid);
+            var blocksToCheck = challenge.BlockChallengeCidIdx.Select(idx => blockCids[idx]);
             using (var ms = new MemoryStream())
             {
-                foreach (var challengeBlockChallengeCid in challenge.BlockChallengeCids)
+                foreach (var challengeBlockChallengeCid in blocksToCheck)
                 {
                     using (var blockStream = await _dfs.GetBlockAsync(challengeBlockChallengeCid))
                     {
                         var salt = System.Text.Encoding.UTF8.GetBytes(challenge.ChallengeSalt);
-                        var peerSalt = senderPeerIdentifier.PeerId.ToByteArray();
+                        var peerSalt = challengerPeerIdentifier.PeerId.ToByteArray();
 
                         blockStream.CopyTo(blockStream);
                         ms.Write(salt);

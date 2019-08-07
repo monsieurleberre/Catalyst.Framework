@@ -33,5 +33,7 @@ namespace Catalyst.Common.Interfaces.Modules.Marketplace
         bool Verify(IPeerIdentifier from, IBlockChallenge challenge, string answer);
 
         Task IncomingChallenge(IPeerIdentifier senderPeerIdentifier, IBlockChallenge challenge);
+
+        Task<string> Answer(IPeerIdentifier senderPeerIdentifier, IBlockChallenge challenge, string[] blockCids = null);
     }
 }

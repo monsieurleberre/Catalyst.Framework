@@ -33,7 +33,7 @@ namespace Catalyst.Common.Interfaces.Modules.Dfs
     /// </summary>
     public interface IDfs
     {
-        Task<string[]> GetFileBlockCids(string fileCid);
+        Task<string[]> GetFileBlockCids(string fileCid, CancellationToken cancellationToken = default);
 
         Task<Stream> GetBlockAsync(string blockId, CancellationToken cancellationToken = default);
 

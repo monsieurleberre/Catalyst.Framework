@@ -29,13 +29,13 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
     {
         public string ChallengeSalt { get; set; }
         public string MainFileCid { get; set; }
-        public string[] BlockChallengeCids { get; set; }
+        public int[] BlockChallengeCidIdx { get; set; }
 
         public override int GetHashCode()
         {
             return ChallengeSalt.GetHashCode() + 
-                MainFileCid.GetHashCode() + 
-                BlockChallengeCids.GetHashCode();
+                MainFileCid.GetHashCode() +
+                BlockChallengeCidIdx.GetHashCode();
         }
     }
 }

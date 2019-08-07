@@ -22,6 +22,7 @@
 #endregion
 
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
@@ -49,8 +50,12 @@ namespace Catalyst.Core.Lib.Modules.Dfs
             _logger = logger;
         }
 
-        public Task<string[]> GetFileBlockCids(string fileCid) => Task.FromResult(new string[] {"TODO"});
-
+        public async Task<string[]> GetFileBlockCids(string fileCid, CancellationToken cancellationToken = default)
+        {
+            var links = await _ipfs.Object.LinksAsync(Cid.Decode(fileCid), cancellationToken);
+            return links.Select(link => link.Id.ToString()).ToArray();
+        }
+        
         public async Task<Stream> GetBlockAsync(string blockId, CancellationToken cancellationToken = default)
         {
             var block = await _ipfs.Block.GetAsync(Cid.Decode(blockId), cancellationToken);
