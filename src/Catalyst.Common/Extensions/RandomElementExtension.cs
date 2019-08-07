@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Common.Cryptography;
 using Dawn;
 
 namespace Catalyst.Common.Extensions
@@ -81,6 +82,27 @@ namespace Catalyst.Common.Extensions
                .ToList();
 
             return randomlyMapped;
+        }
+
+        public static IList<T> RandomizeWithSeed<T>(this IEnumerable<T> source, string seed, int? randomSampleSize = null)
+        {
+            var randomList = new List<T>();
+            var isaacRandom = new IsaacRandom(seed);
+            var srcList = source.ToList();
+            var sampleSize = randomSampleSize ?? srcList.Count;
+
+            while (randomList.Count < sampleSize)
+            {
+                var idx = (int) Math.Abs(isaacRandom.NextInt() % srcList.Count());
+                var item = srcList[idx];
+
+                if (!randomList.Contains(item))
+                {
+                    randomList.Add(item);
+                }
+            }
+
+            return randomList;
         }
     }
 }

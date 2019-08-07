@@ -21,8 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P;
-
 namespace Catalyst.Common.Interfaces.Modules.Marketplace
 {
     public interface IBlockChallenge
@@ -31,4 +29,4 @@ namespace Catalyst.Common.Interfaces.Modules.Marketplace
         string MainFileCid { get; set; }
         int[] BlockChallengeCidIdx { get; set; }
     }
-}
+} 

@@ -47,7 +47,6 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IPeerClient _peerClient;
         private readonly ILogger _logger;
-
         private int BlockTestPercentage => 20;
 
         public ProofOfExistence(ILogger logger,
@@ -162,7 +161,8 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
         {
             var answer = await Answer(senderPeerIdentifier, challenge);
 
-            // TODO: Send answer
+            // TODO: Send broadcast answer
+
         }
     }
 }

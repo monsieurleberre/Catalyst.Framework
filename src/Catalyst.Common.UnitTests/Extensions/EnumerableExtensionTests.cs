@@ -43,6 +43,18 @@ namespace Catalyst.Common.UnitTests.Extensions
         }
 
         [Fact]
+        public static void CanDeterministicallyRandomizeList()
+        {
+            int[] fakeArray = {1, 2, 3, 4, 5};
+            var fakeList = new List<int>(fakeArray);
+            var copiedList = new List<int>(fakeArray);
+            string seed = "MySuperSeed";
+
+            fakeList.RandomizeWithSeed(seed)
+               .SequenceEqual(copiedList.RandomizeWithSeed(seed)).Should().BeTrue();
+        }
+
+        [Fact]
         public static void RandomElementReturnsCorrectTypeOfBool()
         {
             var randomList = new List<bool> {false};
