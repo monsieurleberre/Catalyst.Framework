@@ -43,7 +43,7 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
         private readonly IDfs _dfs;
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly IMultihashAlgorithm _multihashAlgorithm;
-        private readonly ConcurrentDictionary<IBlockChallenge, string> _challengeAnswers;
+        private readonly ConcurrentDictionary<BlockChallengeRequest, string> _challengeAnswers;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IPeerClient _peerClient;
         private readonly ILogger _logger;
