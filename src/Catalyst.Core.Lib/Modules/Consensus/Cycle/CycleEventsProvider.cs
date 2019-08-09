@@ -22,12 +22,14 @@
 #endregion
 
 using System;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Modules.Consensus.Cycle;
+using Serilog;
 
 namespace Catalyst.Core.Lib.Modules.Consensus.Cycle
 {
@@ -36,46 +38,52 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Cycle
     public class CycleEventsProvider : ICycleEventsProvider, IDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
+        protected readonly IScheduler Scheduler;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
         public CycleEventsProvider(ICycleConfiguration configuration,
             IDateTimeProvider timeProvider,
             ICycleSchedulerProvider schedulerProvider,
-            IDeltaHashProvider deltaHashProvider)
+            IDeltaHashProvider deltaHashProvider,
+            ILogger logger)
         {
             _cancellationTokenSource = new CancellationTokenSource();
             
             Configuration = configuration;
-            var scheduler = schedulerProvider.Scheduler;
+            Scheduler = schedulerProvider.Scheduler;
 
             var constructionStatusChanges = StatefulPhase.GetStatusChangeObservable(
-                PhaseName.Construction, Configuration.Construction, Configuration.CycleDuration, scheduler);
+                PhaseName.Construction, Configuration.Construction, Configuration.CycleDuration, Scheduler);
 
             var campaigningStatusChanges = StatefulPhase.GetStatusChangeObservable(
-                PhaseName.Campaigning, Configuration.Campaigning, Configuration.CycleDuration, scheduler);
+                PhaseName.Campaigning, Configuration.Campaigning, Configuration.CycleDuration, Scheduler);
 
             var votingStatusChanges = StatefulPhase.GetStatusChangeObservable(
-                PhaseName.Voting, Configuration.Voting, Configuration.CycleDuration, scheduler);
+                PhaseName.Voting, Configuration.Voting, Configuration.CycleDuration, Scheduler);
 
             var synchronisationStatusChanges = StatefulPhase.GetStatusChangeObservable(
-                PhaseName.Synchronisation, Configuration.Synchronisation, Configuration.CycleDuration, scheduler);
+                PhaseName.Synchronisation, Configuration.Synchronisation, Configuration.CycleDuration, Scheduler);
 
-            var synchronisationOffset = GetTimeSpanUntilNextCycleStart(timeProvider);
+            _dateTimeProvider = timeProvider;
+            var synchronisationOffset = GetTimeSpanUntilNextCycleStart();
 
             PhaseChanges = constructionStatusChanges
-               .Merge(campaigningStatusChanges, scheduler)
-               .Merge(votingStatusChanges, scheduler)
-               .Merge(synchronisationStatusChanges, scheduler)
-               .Delay(TimeSpan.FromTicks(synchronisationOffset), scheduler)
-               .Select(s => new Phase(deltaHashProvider.GetLatestDeltaHash(timeProvider.UtcNow), s.Name, s.Status, timeProvider.UtcNow))
+               .Merge(campaigningStatusChanges, Scheduler)
+               .Merge(votingStatusChanges, Scheduler)
+               .Merge(synchronisationStatusChanges, Scheduler)
+               .Delay(synchronisationOffset, Scheduler)
+               .Select(s => new Phase(deltaHashProvider.GetLatestDeltaHash(_dateTimeProvider.UtcNow), s.Name, s.Status, _dateTimeProvider.UtcNow))
+               .Do(p => logger.Debug("Current delta production phase {phase}", p))
                .TakeWhile(_ => !_cancellationTokenSource.IsCancellationRequested);
         }
 
-        private long GetTimeSpanUntilNextCycleStart(IDateTimeProvider timeProvider)
+        public TimeSpan GetTimeSpanUntilNextCycleStart()
         {
-            var cycleDurationTicks = timeProvider.UtcNow.Ticks % Configuration.CycleDuration.Ticks;
-            return cycleDurationTicks == 0
+            var cycleDurationTicks = _dateTimeProvider.UtcNow.Ticks % Configuration.CycleDuration.Ticks;
+            var ticksUntilNextCycleStart = cycleDurationTicks == 0
                 ? 0 
                 : Configuration.CycleDuration.Ticks - cycleDurationTicks;
+            return TimeSpan.FromTicks(ticksUntilNextCycleStart);
         }
 
         /// <inheritdoc />
