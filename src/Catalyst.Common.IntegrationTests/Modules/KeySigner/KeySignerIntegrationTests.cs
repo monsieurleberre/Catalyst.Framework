@@ -31,6 +31,7 @@ using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
+using FluentAssertions;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
@@ -80,7 +81,7 @@ namespace Catalyst.Common.IntegrationTests.Modules.KeySigner
         {
             _keySigner.Sign(Encoding.UTF8.GetBytes("sign this plz"), new SigningContext());
         }
-
+        
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void KeySigner_Can_Sign_If_There_Is_An_Existing_Keystore_File()

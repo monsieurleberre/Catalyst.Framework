@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.Modules.Marketplace;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Protocol.DfsMarketplace;
 using Google.Protobuf;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
@@ -58,14 +59,14 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
         {
             _logger = logger;
             _peerClient = peerClient;
-            _challengeAnswers = new ConcurrentDictionary<IBlockChallenge, string>();
+            _challengeAnswers = new ConcurrentDictionary<BlockChallengeRequest, string>();
             _deltaHashProvider = deltaHashProvider;
             _multihashAlgorithm = multihashAlgorithm;
             _dfs = dfs;
             _peerIdentifier = peerIdentifier;
         }
 
-        public async Task<IBlockChallenge> Send(IPeerIdentifier recipientPeerIdentifier, string fileCid)
+        public async Task<BlockChallengeRequest> Send(IPeerIdentifier recipientPeerIdentifier, string fileCid)
         {
             var latestDeltaHash = _deltaHashProvider.GetLatestDeltaHash(DateTime.UtcNow);
             var blockCids = await _dfs.GetFileBlockCids(fileCid);
@@ -81,7 +82,7 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
                 return null;
             }
 
-            var challenge = new BlockChallenge
+            var challenge = new BlockChallengeRequest
             {
                 MainFileCid = fileCid,
                 ChallengeSalt = latestDeltaHash,
@@ -103,7 +104,7 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
             // TODO: Send Challenge
         }
 
-        public bool Verify(IPeerIdentifier from, IBlockChallenge challenge, string answer)
+        public bool Verify(IPeerIdentifier from, BlockChallengeRequest challenge, string answer)
         {
             if (!_challengeAnswers.ContainsKey(challenge))
             {

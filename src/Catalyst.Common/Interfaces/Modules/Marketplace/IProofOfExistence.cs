@@ -23,17 +23,18 @@
 
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Protocol.DfsMarketplace;
 
 namespace Catalyst.Common.Interfaces.Modules.Marketplace
 {
     public interface IProofOfExistence
     {
-        Task<IBlockChallenge> Send(IPeerIdentifier recipientPeerIdentifier, string fileCid);
+        Task<BlockChallengeRequest> Send(IPeerIdentifier recipientPeerIdentifier, string fileCid);
 
-        bool Verify(IPeerIdentifier from, IBlockChallenge challenge, string answer);
+        bool Verify(IPeerIdentifier from, BlockChallengeResponse challenge, string answer);
 
-        Task IncomingChallenge(IPeerIdentifier senderPeerIdentifier, IBlockChallenge challenge);
+        Task IncomingChallenge(IPeerIdentifier senderPeerIdentifier, BlockChallengeRequest challenge);
 
-        Task<string> Answer(IPeerIdentifier senderPeerIdentifier, IBlockChallenge challenge, string[] blockCids = null);
+        Task<string> Answer(IPeerIdentifier senderPeerIdentifier, BlockChallengeRequest challenge, string[] blockCids = null);
     }
 }
