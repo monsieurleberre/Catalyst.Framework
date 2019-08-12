@@ -31,7 +31,7 @@ namespace Catalyst.Common.Interfaces.Modules.Marketplace
     {
         Task<BlockChallengeRequest> Send(IPeerIdentifier recipientPeerIdentifier, string fileCid);
 
-        bool Verify(IPeerIdentifier from, BlockChallengeResponse challenge, string answer);
+        bool Verify(IPeerIdentifier from, BlockChallengeResponse challenge);
 
         Task IncomingChallenge(IPeerIdentifier senderPeerIdentifier, BlockChallengeRequest challenge);
 

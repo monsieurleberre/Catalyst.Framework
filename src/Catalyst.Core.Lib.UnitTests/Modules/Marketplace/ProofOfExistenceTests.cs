@@ -1,21 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using Catalyst.Common.Cryptography;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.Modules.Marketplace;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.Modules.Marketplace;
+using Catalyst.Protocol.DfsMarketplace;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Google.Protobuf;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.Modules.Marketplace
@@ -25,12 +26,14 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Marketplace
         private readonly IProofOfExistence _proofOfExistence;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IDfs _dfs;
+        private readonly IMultihashAlgorithm _multihashAlgorithm;
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly string[] _fakeBlockCids = {"FakeCidFileBlock1", "FakeCidFileBlock2", "FakeCidFileBlock3"};
         private readonly List<Stream> _fakeBlockStreams;
 
         public ProofOfExistenceTests()
         {
+            _multihashAlgorithm = new BLAKE2B_256();
             _fakeBlockStreams = new List<Stream>();
 
             _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("SENDER");
@@ -59,7 +62,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Marketplace
                 _peerIdentifier,
                 _dfs,
                 _deltaHashProvider,
-                new BLAKE2B_256());
+                _multihashAlgorithm);
         }
 
         [Fact]
@@ -67,14 +70,26 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Marketplace
         {
             var challenge = await _proofOfExistence.Send(_peerIdentifier, "Any");
             var answer = await _proofOfExistence.Answer(_peerIdentifier, challenge);
-            _proofOfExistence.Verify(_peerIdentifier, challenge, answer).Should().BeTrue();
+            var response = new BlockChallengeResponse()
+            {
+                Answer = answer,
+                BlockChallengeRequestHash = challenge.ToByteArray().ComputeMultihash(_multihashAlgorithm)
+            };
+
+            _proofOfExistence.Verify(_peerIdentifier, response).Should().BeTrue();
         }
 
         [Fact]
         public async Task Can_Fail_PoE_Challenge_With_Incorrect_Answer()
         {
             var challenge = await _proofOfExistence.Send(_peerIdentifier, "Any");
-            _proofOfExistence.Verify(_peerIdentifier, challenge, "A fake answer").Should().BeFalse();
+            var response = new BlockChallengeResponse()
+            {
+                Answer = "Fake answer",
+                BlockChallengeRequestHash = challenge.ToByteArray().ComputeMultihash(_multihashAlgorithm)
+            };
+
+            _proofOfExistence.Verify(_peerIdentifier, response).Should().BeFalse();
         }
 
         public void Dispose()

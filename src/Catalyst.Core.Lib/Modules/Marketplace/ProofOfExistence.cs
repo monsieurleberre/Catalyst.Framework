@@ -44,7 +44,7 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
         private readonly IDfs _dfs;
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly IMultihashAlgorithm _multihashAlgorithm;
-        private readonly ConcurrentDictionary<BlockChallengeRequest, string> _challengeAnswers;
+        private readonly ConcurrentDictionary<string, string> _challengeAnswers;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IPeerClient _peerClient;
         private readonly ILogger _logger;
@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
         {
             _logger = logger;
             _peerClient = peerClient;
-            _challengeAnswers = new ConcurrentDictionary<BlockChallengeRequest, string>();
+            _challengeAnswers = new ConcurrentDictionary<string, string>();
             _deltaHashProvider = deltaHashProvider;
             _multihashAlgorithm = multihashAlgorithm;
             _dfs = dfs;
@@ -70,13 +70,8 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
         {
             var latestDeltaHash = _deltaHashProvider.GetLatestDeltaHash(DateTime.UtcNow);
             var blockCids = await _dfs.GetFileBlockCids(fileCid);
-            var minimumBlocksToCheck = Math.Max(1, blockCids.Length * (BlockTestPercentage / 100));
-            var blocksToCheck = blockCids
-               .Select((cid, index) => new {index, cid})
-               .Shuffle().Take(minimumBlocksToCheck)
-               .Select(p => p.index).ToArray();
-
-            if (!blocksToCheck.Any())
+            
+            if (!blockCids.Any())
             {
                 _logger.Error("No blocks to check for " + fileCid);
                 return null;
@@ -85,58 +80,59 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
             var challenge = new BlockChallengeRequest
             {
                 MainFileCid = fileCid,
-                ChallengeSalt = latestDeltaHash,
-                BlockChallengeCidIdx = blocksToCheck
+                ChallengeSalt = latestDeltaHash
             };
 
+            var challengeHash = challenge.ToByteArray().ComputeMultihash(_multihashAlgorithm).ToString();
             var answer = await Answer(_peerIdentifier, challenge, blockCids);
 
-            if (_challengeAnswers.ContainsKey(challenge))
+            if (_challengeAnswers.ContainsKey(challengeHash))
             {
                 _logger.Information("Awaiting challenge: " + challenge.MainFileCid);
                 return null;
             }
 
-            _challengeAnswers.GetOrAdd(challenge, answer);
-
-            return challenge;
-
+            _challengeAnswers.GetOrAdd(challengeHash, answer);
+            
             // TODO: Send Challenge
+            
+            return challenge;
         }
 
-        public bool Verify(IPeerIdentifier from, BlockChallengeRequest challenge, string answer)
+        public bool Verify(IPeerIdentifier from, BlockChallengeResponse challenge)
         {
-            if (!_challengeAnswers.ContainsKey(challenge))
+            var challengeHash = challenge.BlockChallengeRequestHash;
+            if (!_challengeAnswers.ContainsKey(challengeHash))
             {
                 _logger.Error("Challenge response does not exist in list.");
                 return false;
             }
 
-            _challengeAnswers.TryGetValue(challenge, out var expectedAnswer);
+            _challengeAnswers.TryGetValue(challengeHash, out var expectedAnswer);
 
             if (string.IsNullOrWhiteSpace(expectedAnswer))
             {
                 return false;
             }
 
-            if (!expectedAnswer.Equals(answer))
+            if (!expectedAnswer.Equals(challenge.Answer))
             {
-                _logger.Error($"Peer {from} provided wrong answer to {challenge.MainFileCid} storage challenge");
+                _logger.Error($"Peer {from} provided wrong answer to {challengeHash} storage challenge");
                 return false;
             }
 
-            _challengeAnswers.TryRemove(challenge, out _);
+            _challengeAnswers.TryRemove(challengeHash, out _);
 
             // TODO: Broadcast validation result for % of file
 
             return true;
         }
 
-        public async Task<string> Answer(IPeerIdentifier challengerPeerIdentifier, IBlockChallenge challenge, string[] blockCids = null)
+        public async Task<string> Answer(IPeerIdentifier challengerPeerIdentifier, BlockChallengeRequest challenge, string[] blockCids = null)
         {
             Multihash answer;
             blockCids = blockCids ?? await _dfs.GetFileBlockCids(challenge.MainFileCid);
-            var blocksToCheck = challenge.BlockChallengeCidIdx.Select(idx => blockCids[idx]);
+            var blocksToCheck = GetBlockCidsToCheck(blockCids, challenge.ChallengeSalt);
             using (var ms = new MemoryStream())
             {
                 foreach (var challengeBlockChallengeCid in blocksToCheck)
@@ -158,12 +154,27 @@ namespace Catalyst.Core.Lib.Modules.Marketplace
             return answer?.ToString();
         }
 
-        public async Task IncomingChallenge(IPeerIdentifier senderPeerIdentifier, IBlockChallenge challenge)
+        public async Task IncomingChallenge(IPeerIdentifier senderPeerIdentifier, BlockChallengeRequest challenge)
         {
             var answer = await Answer(senderPeerIdentifier, challenge);
+            var blockChallengeRequestHash = challenge.ToByteArray().ComputeMultihash(_multihashAlgorithm);
+
+            var challengeAnswerResponse = new BlockChallengeResponse
+            {
+                Answer = answer,
+                BlockChallengeRequestHash = blockChallengeRequestHash
+            };
 
             // TODO: Send broadcast answer
+        }
 
+        private string[] GetBlockCidsToCheck(string[] blockCids, string latestDeltaHash)
+        {
+            var minimumBlocksToCheck = Math.Max(1, blockCids.Length * (BlockTestPercentage / 100));
+            var blocksToCheck = blockCids
+               .RandomizeWithSeed(latestDeltaHash, minimumBlocksToCheck)
+               .ToArray();
+            return blocksToCheck;
         }
     }
 }

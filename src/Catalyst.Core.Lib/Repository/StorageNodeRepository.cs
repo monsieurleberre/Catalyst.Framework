@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.P2P;
+using Catalyst.Common.P2P.Models;
 using Catalyst.Common.Repository;
 using SharpRepository.Repository;
 

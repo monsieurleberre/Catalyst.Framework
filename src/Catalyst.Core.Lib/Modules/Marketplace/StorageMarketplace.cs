@@ -1,7 +1,7 @@
 using Catalyst.Common.Interfaces.Modules.Marketplace;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.P2P;
+using Catalyst.Common.P2P.Models;
 
 namespace Catalyst.Core.Lib.Modules.Marketplace
 {
