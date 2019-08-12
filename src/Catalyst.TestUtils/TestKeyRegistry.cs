@@ -24,6 +24,7 @@
 using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Registry;
+using Catalyst.Common.Types;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using NSubstitute;
@@ -37,7 +38,7 @@ namespace Catalyst.TestUtils
         
         static TestKeyRegistry()
         {
-            TestPrivateKey = "1AkF3HgddsuQYdgELdbCpRJwWKhFYvscTX2XBjR1c5FHgG";
+            TestPrivateKey = "1WG487E925TDYDG37DBBSHCVJQ7PT1TZK9TF2KS8CBPNBZAYQXQG";
 
             var cryptoContext = new CryptoContext(new CryptoWrapper());
             var fakePrivateKey = cryptoContext.PrivateKeyFromBytes(TestPrivateKey.KeyToBytes());
@@ -49,7 +50,7 @@ namespace Catalyst.TestUtils
             var keyRegistry = Substitute.For<IKeyRegistry>();
             var cryptoContext = new CryptoContext(new CryptoWrapper());
             var fakePrivateKey = cryptoContext.PrivateKeyFromBytes(TestPrivateKey.KeyToBytes());
-            keyRegistry.GetItemFromRegistry(KeyRegistryKey.DefaultKey).Returns(fakePrivateKey);
+            keyRegistry.GetItemFromRegistry(KeyRegistryTypes.DefaultKey).Returns(fakePrivateKey);
             keyRegistry.Contains(Arg.Any<byte[]>()).Returns(true);
             return keyRegistry;
         }
