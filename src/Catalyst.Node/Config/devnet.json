@@ -31,6 +31,15 @@
                 //  "factory": "SharpRepository.MongoDbRepository.MongoDbConfigRepositoryFactory, SharpRepository.MongoDbRepository",
                 //  "connectionString": "mongodb:://127.0.0.1"
                 //},
+
+                "efCore": {
+                    "factory": "SharpRepository.EfCoreRepository.EfCoreConfigRepositoryFactory, SharpRepository.EfCoreRepository",
+                    "connectionString": "Server = databasemachine.traderiser.com\\SQL2012, 49175; Database = AtlasCity; User Id = developer; Password = d3v3lop3rhous3;", // optional, you can configure it with dependency resolver
+                    "dbContextType": "DbContext, Microsoft.EntityFrameworkCore"
+
+                    //"dbContextType": "TestObjectContextCore, Catalyst.Core.Lib.IntegrationTests.P2P" // optional, you can configure it with dependency resolver
+                },
+
                 "inMemoryNoCaching": {
                     "factory": "SharpRepository.InMemoryRepository.InMemoryConfigRepositoryFactory, SharpRepository.InMemoryRepository",
                     "cachingStrategy": "none",

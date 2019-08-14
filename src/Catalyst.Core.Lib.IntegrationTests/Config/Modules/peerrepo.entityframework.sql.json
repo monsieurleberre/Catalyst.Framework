@@ -1,0 +1,61 @@
+{
+    "defaultAssembly": "Catalyst.Core.Lib",
+    "components": [
+        //{
+        //    "type": "SharpRepository.EfCoreRepository.EfCoreRepository`2[[Catalyst.Common.Modules.Mempool.Models.MempoolDocument, Catalyst.Common], [System.String, mscorlib]], SharpRepository.EfCoreRepository",
+        //    "services": [
+        //        {
+        //            "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.Modules.Mempool.Models.MempoolDocument, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
+        //        }
+        //    ]
+        //},
+        {
+            "type": "Catalyst.Common.Repository.TempEfCoreRepository,  Catalyst.Common",
+            "services": [
+                {
+                    //"type": "SharpRepository.EfCoreRepository.EfCoreRepository`2[[Catalyst.Common.Modules.Mempool.Models.MempoolDocument, Catalyst.Common], [System.String, mscorlib]], SharpRepository.EfCoreRepository"
+                    "type":
+                        "SharpRepository.Repository.IRepository`2[[Catalyst.Common.Modules.Mempool.Models.MempoolDocument, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.Repository.MempoolRepository, Catalyst.Core.Lib",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Repository.IMempoolRepository, Catalyst.Common"
+                }
+            ]
+        }
+        //,
+        //{
+        //    "type": "Microsoft.EntityFrameworkCore.DbContext, Microsoft.EntityFrameworkCore",
+        //    "services": [
+        //        {
+        //            "type": "Microsoft.EntityFrameworkCore.DbContext, Microsoft.EntityFrameworkCore"
+        //        }
+        //    ]
+        //}
+        ,
+        {
+            "type": "Catalyst.Core.Lib.Modules.Mempool.Mempool",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Mempool.IMempool, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.Repository.TestObjectContextCore, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Microsoft.EntityFrameworkCore.DbContext, Microsoft.EntityFrameworkCore"
+                }
+            ],
+            "parameters": {
+                "connectionString": "Server=databasemachine.traderiser.com\\SQL2012, 49175; Database = AtlasCity; User Id = developer; Password = d3v3lop3rhous3;"
+            },
+            "injectProperties": true
+        }
+    ]
+}

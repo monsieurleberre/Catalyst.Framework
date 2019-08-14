@@ -11,6 +11,9 @@
     </PropertyGroup>
     <Import Project="../Common.IntegrationTests.props" />
     <ItemGroup>
+        <None Update="Config\Modules\peerrepo.entityframework.sql.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="Config\Modules\mempool.inmemory.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
@@ -34,5 +37,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.App" />
+        <PackageReference Include="SharpRepository.EfCoreRepository" Version="2.0.2.2" />
+        <PackageReference Include="SharpRepository.EfRepository" Version="2.0.3.1" />
     </ItemGroup>
 </Project>

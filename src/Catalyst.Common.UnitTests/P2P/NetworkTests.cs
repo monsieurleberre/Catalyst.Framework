@@ -53,7 +53,6 @@ namespace Catalyst.Common.UnitTests.P2P
             var allModuleNames = Enumeration.GetAll<Config.Network>().Select(m => m.Name);
 
             var expectedList = new List<string> {"mainnet", "devnet", "testnet"};
-
             allModuleNames.Should().BeEquivalentTo(expectedList);
         }
     }
