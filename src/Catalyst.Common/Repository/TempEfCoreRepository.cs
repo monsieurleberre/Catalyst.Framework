@@ -24,59 +24,175 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Modules.Mempool.Models;
+using Catalyst.Common.P2P.Models;
+using Catalyst.Protocol;
+using Catalyst.Protocol.Common;
+using Google.Protobuf;
 using Microsoft.EntityFrameworkCore;
 using SharpRepository.EfCoreRepository;
 using SharpRepository.Repository;
 using SharpRepository.Repository.Caching;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Catalyst.Common.Repository
 {
-    public class TempEfCoreRepository : EfCoreRepository<MempoolDocument, string> 
+    public interface IDbContext : IDisposable
     {
-        public TempEfCoreRepository(TestObjectContextCore dbContext, ICachingStrategy<MempoolDocument, string> cachingStrategy = null) : base(dbContext, cachingStrategy)
-        {
-
-        }
+        DbSet<TEntity> Set<TEntity>() where TEntity : class;
     }
 
-    public class TestObjectContextCore : Microsoft.EntityFrameworkCore.DbContext
+    //public class EnhancedEfCoreRepository : EfCoreRepository<MempoolTempDocument, string>
+    //{
+    //    public EnhancedEfCoreRepository(IDbContext dbContext, ICachingStrategy<MempoolTempDocument, string> cachingStrategy = null) :
+    //        base((Microsoft.EntityFrameworkCore.DbContext) dbContext, cachingStrategy)
+    //    { }
+    //}
+
+    public class EnhancedEfCoreRepository : EfCoreRepository<Contact, string>
     {
-        //public TestObjectContextCore()
-        //{ }
+        public EnhancedEfCoreRepository(IDbContext dbContext, ICachingStrategy<Contact, string> cachingStrategy = null) :
+            base((Microsoft.EntityFrameworkCore.DbContext) dbContext, cachingStrategy)
+        { }
+    }
 
-        //public TestObjectContextCore(string connectionString)
-        //    : base(new DbContextOptionsBuilder<TestObjectContextCore>()
-        //       .UseSqlServer(connectionString).Options)
-        //{
-        //    //var options = new DbContextOptionsBuilder<TestObjectContextCore>()
-        //    //   .UseSqlServer(connectionString).Options;
-        //}
+    public class EfCoreContext : Microsoft.EntityFrameworkCore.DbContext, IDbContext
+    {
+        public EfCoreContext(string connectionString)
+            : base(new DbContextOptionsBuilder<EfCoreContext>()
+               .UseSqlServer(connectionString).Options) { }
 
-        public TestObjectContextCore()
-            : base(new DbContextOptionsBuilder<TestObjectContextCore>()
-               .UseSqlServer("Server=databasemachine.traderiser.com\\SQL2012, 49175; Database = AtlasCity; User Id = developer; Password = d3v3lop3rhous3;").Options)
-        {
-            //var options = new DbContextOptionsBuilder<TestObjectContextCore>()
-            //   .UseSqlServer(connectionString).Options;
-        }
+        //public Microsoft.EntityFrameworkCore.DbSet<Contact> Contacts { get; set; }
+        //public Microsoft.EntityFrameworkCore.DbSet<PhoneNumber> PhoneNumbers { get; set; }
+        //public Microsoft.EntityFrameworkCore.DbSet<EmailAddress> EmailAddresses { get; set; }
+        //public Microsoft.EntityFrameworkCore.DbSet<MempoolDocument> MempoolDocument { get; set; }
+        //public Microsoft.EntityFrameworkCore.DbSet<ByteString> ByteStr { get; set; }
+        //public Microsoft.EntityFrameworkCore.DbSet<byte[]> ByteItem { get; set; }
+        //public Microsoft.EntityFrameworkCore.DbSet<MempoolTempDocument> MempoolTempDocument { get; set; }
+        //public Microsoft.EntityFrameworkCore.DbSet<PeerInfo> PeerInfo { get; set; }
 
-        //public TestObjectContextCore(DbContextOptions<TestObjectContextCore> options)
-        //    : base(options)
-        //{ }
+        //public Microsoft.EntityFrameworkCore.DbSet<PeerId> PeerId { get; set; }
 
-        public Microsoft.EntityFrameworkCore.DbSet<Contact> Contacts { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<PhoneNumber> PhoneNumbers { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<EmailAddress> EmailAddresses { get; set; }
+        public Microsoft.EntityFrameworkCore.DbSet<PeerIdDb> PeerIdDb { get; set; }
 
+        public Microsoft.EntityFrameworkCore.DbSet<Peer> Peer { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().HasKey(u => new {u.Username, u.Age});
+            var converter = new ValueConverter<ByteString, string>(
+                v => v.ToBase64(),
+                v => ByteString.FromBase64(v));
 
-            modelBuilder.Entity<Node>();
+            //Converts//
+
+            //modelBuilder
+            //   .Entity<Peer>()
+            //   .Property(e => e.PeerIdentifier)
+            //   .HasConversion(converter);
+
+            //modelBuilder
+            //   .Entity<PeerId>()
+            //   .Property(e => e.ClientVersion)
+            //   .HasConversion(converter);
+
+            //modelBuilder
+            //   .Entity<PeerId>()
+            //   .Property(e => e.Ip)
+            //   .HasConversion(converter);
+
+            //modelBuilder
+            //   .Entity<PeerId>()
+            //   .Property(e => e.ClientId)
+            //   .HasConversion(converter);
+
+            //modelBuilder
+            //   .Entity<PeerId>()
+            //   .Property(e => e.Port)
+            //   .HasConversion(converter);
+
+            //modelBuilder
+            //   .Entity<PeerId>()
+            //   .Property(e => e.PublicKey)
+            //   .HasConversion(converter);
+
+
+            //---------------------------------------//
+            modelBuilder
+               .Entity<PeerIdDb>()
+               .Property(e => e.ClientVersion)
+               .HasConversion(converter);
+
+            modelBuilder
+               .Entity<PeerIdDb>()
+               .Property(e => e.Ip)
+               .HasConversion(converter);
+
+            modelBuilder
+               .Entity<PeerIdDb>()
+               .Property(e => e.ClientId)
+               .HasConversion(converter);
+
+            modelBuilder
+               .Entity<PeerIdDb>()
+               .Property(e => e.Port)
+               .HasConversion(converter);
+
+            modelBuilder
+               .Entity<PeerIdDb>()
+               .Property(e => e.PublicKey)
+               .HasConversion(converter);
+
+            modelBuilder
+               .Entity<PeerIdDb>()
+               .Property(e => e.Descriptor)
+               .HasConversion(converter);
         }
+
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    var converter = new ValueConverter<ByteString, string>(
+        //        v => v.ToBase64(),
+        //        v => ByteString.FromBase64(v));
+
+        //    //Converts//
+
+        //    modelBuilder
+        //       .Entity<PeerIdDb>()
+        //       .Property(e => e.ClientId)
+        //       .HasConversion(converter);
+
+        //    modelBuilder
+        //       .Entity<PeerIdDb>()
+        //       .Property(e => e.ClientVersion)
+        //       .HasConversion(converter);
+
+        //    modelBuilder
+        //       .Entity<PeerIdDb>()
+        //       .Property(e => e.Ip)
+        //       .HasConversion(converter);
+
+        //    modelBuilder
+        //       .Entity<PeerIdDb>()
+        //       .Property(e => e.Descriptor)
+        //       .HasConversion(converter);
+
+        //    modelBuilder
+        //       .Entity<PeerIdDb>()
+        //       .Property(e => e.Port)
+        //       .HasConversion(converter);
+
+        //    modelBuilder
+        //       .Entity<PeerIdDb>()
+        //       .Property(e => e.PublicKey)
+        //       .HasConversion(converter);
+
+
+        //}
     }
+
 
 
     public class Contact
@@ -183,5 +299,56 @@ namespace Catalyst.Common.Repository
 
         public int ContactTypeId { get; set; }
     }
+
+    public class PeerIdDb : PaperTowel
+    {
+        //[RepositoryPrimaryKey(Order = 1)]
+        //[Key]
+        //public ByteString ClientId { get; set; }
+        public ByteString ClientVersion { get; set; }
+        public ByteString Descriptor { get; set; }
+        public ByteString Ip { get; set; }
+        public ByteString Port { get; set; }
+        public ByteString PublicKey { get; set; }
+    }
+
+    public abstract class PaperTowel
+    {
+        [RepositoryPrimaryKey(Order = 1)]
+        [Key]
+        //public string Id { get; set; }
+        public ByteString ClientId { get; set; }
+
+        public NetworkTemp Net { get; set; }
+
+        public DateTime TimeStamp { get; set; }
+
+        //public TimeSpan TimeStamp { get; set; }
+    }
+
+    public enum NetworkTemp
+    {
+        NETWORK_UNKNOWN = 0,
+        MAINNET = 1,
+        DEVNET = 2,
+        TESTNET = 3
+    }
+
+
+    //public class PeerIdDb
+    //{
+    //    [RepositoryPrimaryKey(Order = 1)]
+    //    [Key]
+    //    public String ClientId { get; set; }
+    //    public String ClientVersion { get; set; }
+    //    public String Descriptor { get; set; }
+    //    public byte[] Ip { get; set; }
+    //    public String Port { get; set; }
+    //    public ByteString PublicKey { get; set; }
+    //}
+
+
+
+
 }
 

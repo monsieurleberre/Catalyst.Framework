@@ -23,13 +23,16 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Modules.Mempool;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Modules.Mempool.Models;
+using Catalyst.Common.P2P.Models;
 using Catalyst.Protocol;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -39,7 +42,13 @@ using Xunit;
 using Xunit.Abstractions;
 using SharpRepository.EfCoreRepository;
 using Catalyst.Common.Repository;
+using Catalyst.Protocol.Transaction;
+using Google.Protobuf;
+using Microsoft.EntityFrameworkCore.Storage;
 using SharpRepository.Repository;
+using Catalyst.Core.Lib.Repository;
+using Catalyst.Protocol.Common;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 //using Entity = Microsoft.EntityFrameworkCore.Entity;
 //using DbContext = Microsoft.EntityFrameworkCore.DbContext;
@@ -52,24 +61,20 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
         private ContainerProvider _containerProvider;
 
         private Microsoft.EntityFrameworkCore.DbContext context;
-
         public void Setup()
         {
-            //var options = new DbContextOptionsBuilder<TestObjectContextCore>()
-            //   .UseSqlServer(
-            //        "Server = databasemachine.traderiser.com\\SQL2012, 49175; Database = AtlasCity; User Id = developer; Password = d3v3lop3rhous3;")
-            //   .Options;
+            var connectionStr =
+                "Server = databasemachine.traderiser.com\\SQL2012, 49175; Database = AtlasCity; User Id = developer; Password = d3v3lop3rhous3;";
+            
+            // Create the schema in the database
+            using (var context = new EfCoreContext(connectionStr))
+            {
+                var built = context.Database.EnsureCreated();
+            }
 
-            //// Create the schema in the database
-            //using (var context = new TestObjectContextCore(options))
-            //{
-            //    context.Database.EnsureCreated();
-            //}
-
-            //// Run the test against one instance of the context
-            //context = new TestObjectContextCore(options);
+            // Run the test against one instance of the context
+            context = new EfCoreContext(connectionStr);
         }
-
 
         public PeerRepositoryIntegrationTests(ITestOutputHelper output) : base(output)
         {
@@ -78,7 +83,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
 
         private async Task Mempool_can_save_and_retrieve(FileInfo mempoolModuleFile)
         {
-            System.Diagnostics.Debug.WriteLine(typeof(TestObjectContextCore).AssemblyQualifiedName);
+            System.Diagnostics.Debug.WriteLine(typeof(EfCoreContext).AssemblyQualifiedName);
 
 
             var alteredComponentsFile = await CreateAlteredConfigForMempool(mempoolModuleFile);
@@ -100,12 +105,11 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
 
                 var guid = CorrelationId.GenerateCorrelationId().ToString();
                 var mempoolDocument = new MempoolDocument
-                { Transaction = TransactionHelper.GetTransaction(signature: guid) };
+                { Transaction = TransactionHelper.GetTransaction(signature: guid)};
 
                 mempool.SaveMempoolDocument(mempoolDocument);
 
                 var retrievedTransaction = mempool.GetMempoolDocument(mempoolDocument.Transaction.Signature);
-
                 retrievedTransaction.Should().Be(mempoolDocument);
                 retrievedTransaction.Transaction.Signature.SchnorrSignature.Should()
                    .BeEquivalentTo(guid.ToUtf8ByteString());
@@ -130,15 +134,132 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
         {
             try
             {
-                var repositoryEf = new EfCoreRepository<Contact, string>(context);
+                var connectionStr =
+                    "Server = databasemachine.traderiser.com\\SQL2012, 49175; Database = AtlasCity; User Id = developer; Password = d3v3lop3rhous3;";
+
+                // Create the schema in the database
+                using (var contextTemp = new EfCoreContext(connectionStr))
+                {
+                    var built = contextTemp.Database.EnsureCreated();
+                }
+
+                // Run the test against one instance of the context
+                var contextTempM = new EfCoreContext(connectionStr);
+                //var databaseCreator = contextTempM.GetService<IRelationalDatabaseCreator>();
+                //databaseCreator.CreateTables();
+
+
+                Random rnd = new Random();
+                var ClientId = new Byte[30];
+                rnd.NextBytes(ClientId);
+
+                var repositoryEf = new EfCoreRepository<PeerIdDb, string>(contextTempM);
                 using (var trans = new TransactionScope())
                 {
-                    repositoryEf.Add(new Contact { Name = "Contact " + new Random().Next() });
+                    var peerIDConv = PeerIdHelper.GetPeerId();
+
+                    var port = peerIDConv.Port;
+                    var pubkey = peerIDConv.PublicKey;
+                    var clientVersion = peerIDConv.ClientVersion.ToString();
+                    var clientId = peerIDConv.ClientId.ToArray();
+                    var ip = peerIDConv.Ip.ToArray();
+
+                    repositoryEf.Add(new PeerIdDb
+                    {
+                        //Id = new Random().Next().ToString(),
+                        ClientId = ByteString.CopyFrom(ClientId),
+                        ClientVersion = peerIDConv.ClientVersion,
+                        Ip = peerIDConv.Ip,
+                        PublicKey = pubkey,
+                        Port = port,
+                        Net = NetworkTemp.MAINNET,
+                        TimeStamp = DateTime.Parse("13/08/2019 08:25")
+
+                        //TimeStamp = TimeSpan.Parse("13/08/2019 08:25")
+                    });
+                    trans.Complete();
+                }
+
+
+
+                //var repositoryEf = new EfCoreRepository<Peer, string>(contextTempM);
+                //using (var trans = new TransactionScope())
+                //{
+                //    var peerIDConv = new Peer {PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("peer1"), LastSeen = DateTime.Now};
+                //    repositoryEf.Add(peerIDConv);
+                //    trans.Complete();
+                //}
+
+
+
+                //var repositoryEf = new EfCoreRepository<MempoolTempDocument, string>(context);
+                //using (var trans = new TransactionScope())
+                //{
+                //    //repositoryEf.Add(new MempoolTempDocument
+                //    //{
+                //    //    DocumentId = Guid.NewGuid().ToString(),
+                //    //    Transaction = 844455
+                //    //});
+
+
+                //    repositoryEf.Add(new MempoolTempDocument
+                //    {
+                //        Transaction = new PeerId()
+                //        //Transaction = TransactionHelper.GetTransaction(signature: Guid.NewGuid().ToString())
+                //    });
+
+
+                //    //repositoryEf.Add(new MempoolTempDocument
+                //    //{ Transaction = TransactionHelper.GetTransaction(signature: Guid.NewGuid().ToString())});
+                //    trans.Complete();
+                //}
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void Peers_with_InEFRepo_can_save_and_retrieve()
+        {
+            try
+            {
+                var connectionStr =
+                    "Server = databasemachine.traderiser.com\\SQL2012, 49175; Database = AtlasCity; User Id = developer; Password = d3v3lop3rhous3;";
+
+                // Create the schema in the database
+                using (var contextTemp = new EfCoreContext(connectionStr))
+                {
+                    var built = contextTemp.Database.EnsureCreated();
+                }
+
+                // Run the test against one instance of the context
+                var contextTempM = new EfCoreContext(connectionStr);
+                var databaseCreator = contextTempM.GetService<IRelationalDatabaseCreator>();
+                databaseCreator.CreateTables();
+
+
+                var repositoryEf = new EfCoreRepository<Peer, string>(contextTempM);
+                using (var trans = new TransactionScope())
+                {
+                    var peerIDConv = new Peer
+                    {
+                        PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("peer1"), LastSeen = DateTime.Now,
+                        MyKey = new Random().Next()
+                    };
+                    repositoryEf.Add(peerIDConv);
                     trans.Complete();
                 }
             }
-            catch (Exception e) { }
+            catch (Exception e)
+            {
+
+            }
         }
+
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
@@ -161,13 +282,4 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
         }
     }
 }
-
-//public class TempoEfCoreRepository<T, TKey> : EfCoreRepository<T, TKey> where T : class
-    //{
-    //    public TempoEfCoreRepository(TestObjectContextCore dbContext, ICachingStrategy<T, TKey> cachingStrategy = null) : base(dbContext, cachingStrategy)
-    //    {
-
-    //    }
-    //}
-
 

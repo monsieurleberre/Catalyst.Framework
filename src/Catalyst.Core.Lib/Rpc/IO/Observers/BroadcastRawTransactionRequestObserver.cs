@@ -69,10 +69,10 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
                     return new BroadcastRawTransactionResponse {ResponseCode = responseCode};
                 }
 
-                _mempool.SaveMempoolDocument(new MempoolDocument
-                {
-                    Transaction = messageDto.Transaction
-                });
+                //_mempool.SaveMempoolDocument(new MempoolDocument
+                //{
+                //    Transaction = messageDto.Transaction
+                //});
 
                 var transactionToBroadcast = messageDto.Transaction.ToProtocolMessage(PeerIdentifier.PeerId,
                     CorrelationId.GenerateCorrelationId());

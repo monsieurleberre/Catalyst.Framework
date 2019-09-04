@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Transaction;
 
 namespace Catalyst.Common.Interfaces.Modules.Mempool
@@ -29,5 +30,13 @@ namespace Catalyst.Common.Interfaces.Modules.Mempool
     public interface IMempoolDocument : IDocument
     {
         TransactionBroadcast Transaction { get; set; }
+    }
+
+    public interface ITempDocument : IDocument
+    {
+        //int Transaction { get; set; }
+        //TransactionBroadcast Transaction { get; set; }
+
+        PeerId Transaction { get; set; }
     }
 }

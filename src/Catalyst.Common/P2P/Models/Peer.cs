@@ -22,6 +22,8 @@
 #endregion
 
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Catalyst.Common.Attributes;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Util;
@@ -37,7 +39,11 @@ namespace Catalyst.Common.P2P.Models
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
         public string DocumentId => PeerIdentifier.PeerId?.ToByteString().ToBase64();
-        
+
+        [Key]
+        public int MyKey { get; set; }
+
+        [NotMapped]
         /// <inheritdoc />
         public IPeerIdentifier PeerIdentifier { get; set; }
             

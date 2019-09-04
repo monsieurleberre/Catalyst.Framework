@@ -27,9 +27,11 @@ using System.Linq;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Modules.Mempool.Models;
+using Catalyst.Common.Repository;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using Google.Protobuf;
+using Microsoft.EntityFrameworkCore.Internal;
 using Nethereum.RLP;
 using Serilog;
 
@@ -43,13 +45,27 @@ namespace Catalyst.Core.Lib.Modules.Mempool
         private readonly ILogger _logger;
         private readonly IMempoolRepository _transactionStore;
 
-        /// <inheritdoc />
+        //private readonly IDbContext _context;
+        //private readonly SharpRepository.Repository.IRepository<Contact, string> _enhancedEfCore;
+
         public Mempool(IMempoolRepository transactionStore, ILogger logger)
         {
             Guard.Argument(transactionStore, nameof(transactionStore)).NotNull();
             _transactionStore = transactionStore;
             _logger = logger;
         }
+
+        /// <inheritdoc />
+        //public Mempool(IMempoolRepository transactionStore, ILogger logger, IDbContext context, SharpRepository.Repository.IRepository<Contact, string> enhancedEfCore)
+        //{
+        //    Guard.Argument(transactionStore, nameof(transactionStore)).NotNull();
+        //    _transactionStore = transactionStore;
+        //    _logger = logger;
+
+        //    _context = context;
+
+        //    _enhancedEfCore = enhancedEfCore;
+        //}
 
         /// <inheritdoc />
         public IEnumerable<IMempoolDocument> GetMemPoolContent()
@@ -94,6 +110,9 @@ namespace Catalyst.Core.Lib.Modules.Mempool
                 {
                     return false;
                 }
+
+                //_enhancedEfCore.Add(new Contact {Name = "Contact " + new Random().Next()});
+               // ((EnhancedEfCoreRepository)_transactionStore).Add(new Contact {Name = "Contact " + new Random().Next()});
 
                 _transactionStore.Add((MempoolDocument) mempoolDocument);
                 return true;
