@@ -60,22 +60,11 @@ namespace Catalyst.Core.Rpc.IO.Transport.Channels
         void Process(IChannelHandlerContext ctx, IHttpRequest request)
         {
             string uri = request.Uri;
-
-            //switch (uri)
-            //{
-            //    case "/plaintext":
-            //        this.WriteResponse(ctx, PlaintextContentBuffer.Duplicate(), TypePlain, PlaintextClheaderValue);
-            //        break;
-            //    case "/json":
-            //        byte[] json = Encoding.UTF8.GetBytes(NewMessage().ToJsonFormat());
-            //        this.WriteResponse(ctx, Unpooled.WrappedBuffer(json), TypeJson, JsonClheaderValue);
-            //        break;
-            //    default:
-            //        var response = new DefaultFullHttpResponse(HttpVersion.Http11, HttpResponseStatus.NotFound, Unpooled.Empty, false);
-            //        ctx.WriteAndFlushAsync(response);
-            //        ctx.CloseAsync();
-            //        break;
-            //}
+            if (content.isReadable())
+            {
+                //To implement https://github.com/netty/netty/blob/master/example/src/main/java/io/netty/example/http/snoop/HttpSnoopServerHandler.java
+                
+            }
         }
 
         void WriteResponse(IChannelHandlerContext ctx, IByteBuffer buf, ICharSequence contentType, ICharSequence contentLength)
