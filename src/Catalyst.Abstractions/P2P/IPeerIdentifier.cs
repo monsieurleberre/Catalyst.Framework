@@ -23,16 +23,16 @@
 
 using System;
 using System.Net;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Abstractions.P2P
 {
+    [Obsolete("This is getting replaced by methods on the PeerId class produced from the protobuf definitions")]
     public interface IPeerIdentifier : IEquatable<IPeerIdentifier>
     {
         PeerId PeerId { get; }
         IPAddress Ip { get; }
         IPEndPoint IpEndPoint { get; }
         int Port { get; }
-        byte[] PublicKey { get; }
     }
 }

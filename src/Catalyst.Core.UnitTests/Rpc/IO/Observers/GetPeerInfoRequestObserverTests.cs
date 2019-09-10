@@ -33,11 +33,13 @@ using Catalyst.Core.P2P.Models;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
@@ -151,7 +153,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [InlineData("this-pk-should-not-exist", "172.0.0.3")]
         [InlineData("publickey-1", "0.0.0.0")]
         [InlineData("publickey-3", "0.0.0.0")]
-        public void TestGetPeerInfoRequestResponseForNonExistantPeers(string publicKey, string ipAddress)
+        public void TestGetPeerInfoRequestResponseForNonExistentPeers(string publicKey, string ipAddress)
         {
             var peerId = PeerIdHelper.GetPeerId(publicKey, ipAddress, 12345);
             var responseContent = GetPeerInfoTest(peerId);

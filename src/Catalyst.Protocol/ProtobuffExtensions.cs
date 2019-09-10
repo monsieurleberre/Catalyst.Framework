@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
@@ -93,8 +93,8 @@ namespace Catalyst.Protocol
 
         public static bool IsBroadCastMessage(this ProtocolMessage message)
         {
-            return message.TypeUrl.EndsWith(nameof(ProtocolMessageSigned)) &&
-                ProtoBroadcastAllowedMessages.Contains(ProtocolMessageSigned.Parser.ParseFrom(message.Value).Message.TypeUrl);
+            return message.TypeUrl.EndsWith(nameof(ProtocolMessage)) &&
+                ProtoBroadcastAllowedMessages.Contains(ProtocolMessage.Parser.ParseFrom(message.Value).TypeUrl);
         }
 
         public static T FromProtocolMessage<T>(this ProtocolMessage message) where T : IMessage<T>

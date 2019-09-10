@@ -29,8 +29,9 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.Network;
 using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Extensions;
+using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 

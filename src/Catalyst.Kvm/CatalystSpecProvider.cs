@@ -31,6 +31,6 @@ namespace Catalyst.Kvm
         public IReleaseSpec GenesisSpec => CatalystGenesisSpec.Instance;
         public IReleaseSpec GetSpec(long blockNumber) => GenesisSpec;
         public long? DaoBlockNumber => null;
-        public int ChainId => NetworkTypes.Dev.Id; // @TODO should we not be using protocol.common.network?
+        public int ChainId => NetworkTypes.Dev.Id; // @TODO should we not be using NetworkType?
     }
 }

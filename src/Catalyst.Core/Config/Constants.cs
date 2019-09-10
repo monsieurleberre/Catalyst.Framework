@@ -27,6 +27,7 @@ using System.Linq;
 using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.Types;
 using Catalyst.Common.Utils;
+using Catalyst.Protocol.Network;
 using Multiformats.Base;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
@@ -127,7 +128,7 @@ namespace Catalyst.Core.Config
             Enumeration.GetAll<ModuleTypes>()
                .Select(m => Path.Combine(ModulesSubFolder, string.Format(JsonFilePattern, m.Name.ToLower())));
 
-        public static string NetworkConfigFile(Protocol.Common.Network network, string overrideNetworkFile = null)
+        public static string NetworkConfigFile(NetworkType network, string overrideNetworkFile = null)
         {
             return overrideNetworkFile ?? string.Format(JsonFilePattern, network.ToString().ToLowerInvariant());
         }

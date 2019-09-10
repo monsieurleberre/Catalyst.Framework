@@ -23,20 +23,19 @@
 
 using System.Reflection;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Core.IO.Handlers
 {
-    public sealed class PeerIdValidationHandler : SimpleChannelInboundHandler<ProtocolMessageSigned>
+    public sealed class PeerIdValidationHandler : SimpleChannelInboundHandler<ProtocolMessage>
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly IPeerIdValidator _peerIdValidator;
         public PeerIdValidationHandler(IPeerIdValidator peerIdValidator) { _peerIdValidator = peerIdValidator; }
 
-        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessageSigned msg)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
             Logger.Verbose("Received {msg}", msg);
             if (_peerIdValidator.ValidatePeerIdFormat(msg.Message.PeerId))

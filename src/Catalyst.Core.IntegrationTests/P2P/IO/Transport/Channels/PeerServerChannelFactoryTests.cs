@@ -33,8 +33,11 @@ using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using DotNetty.Transport.Channels.Sockets;
@@ -70,7 +73,7 @@ namespace Catalyst.Core.IntegrationTests.P2P.IO.Transport.Channels
 
             var signingContextProvider = Substitute.For<ISigningContextProvider>();
             signingContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
-            signingContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
+            signingContextProvider.Network.Returns(NetworkType.Devnet);
 
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
 

@@ -23,8 +23,8 @@
 
 using Catalyst.Common.Utils;
 using Catalyst.Core.Consensus.Deltas;
-using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Extensions;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Xunit;

@@ -39,6 +39,7 @@ using Catalyst.Core.Config;
 using Catalyst.Core.IO.Events;
 using Catalyst.Core.Util;
 using Catalyst.Protocol.Interfaces.Validators;
+using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Validators;
 using Microsoft.Extensions.Configuration;
 using Serilog;
@@ -98,7 +99,7 @@ namespace Catalyst.Core.Kernel
         public Kernel BuildKernel(bool overwrite = false, string overrideNetworkFile = null)
         {
             _overwrite = overwrite;
-            _configCopier.RunConfigStartUp(_targetConfigFolder, Protocol.Common.Network.Devnet, null, _overwrite, overrideNetworkFile);
+            _configCopier.RunConfigStartUp(_targetConfigFolder, NetworkType.Devnet, null, _overwrite, overrideNetworkFile);
             
             var config = _configurationBuilder.Build();
             var configurationModule = new ConfigurationModule(config);
@@ -136,7 +137,7 @@ namespace Catalyst.Core.Kernel
             return this;
         }
         
-        public Kernel WithNetworksConfigFile(Protocol.Common.Network network = Protocol.Common.Network.Devnet, string overrideNetworkFile = null)
+        public Kernel WithNetworksConfigFile(NetworkType network = NetworkType.Devnet, string overrideNetworkFile = null)
         {
             var fileName = Constants.NetworkConfigFile(network, overrideNetworkFile);
 

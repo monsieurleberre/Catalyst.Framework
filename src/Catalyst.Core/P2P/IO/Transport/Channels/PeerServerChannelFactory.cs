@@ -39,7 +39,6 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Transport.Channels;
-using Catalyst.Protocol.Common;
 using DotNetty.Codecs;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
@@ -88,7 +87,7 @@ namespace Catalyst.Core.P2P.IO.Transport.Channels
                     return new List<IChannelHandler>
                     {
                         new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                            new DatagramPacketDecoder(new ProtobufDecoder(ProtocolMessageSigned.Parser)),
+                            new DatagramPacketDecoder(new ProtobufDecoder(ProtocolMessage.Parser)),
                             new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
                         ),
                         new PeerIdValidationHandler(_peerIdValidator),

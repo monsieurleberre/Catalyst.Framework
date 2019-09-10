@@ -22,7 +22,6 @@
 #endregion
 
 using System.Text;
-using Catalyst.Protocol.Common;
 using Google.Protobuf.Collections;
 
 namespace Catalyst.Core.Util

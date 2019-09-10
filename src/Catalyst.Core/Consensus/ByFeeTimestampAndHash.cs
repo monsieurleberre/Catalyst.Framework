@@ -24,6 +24,7 @@
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Common.Utils;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Consensus
@@ -48,13 +49,13 @@ namespace Catalyst.Core.Consensus
                 return -1;
             }
 
-            var feeComparison = x.TransactionFees.CompareTo(y.TransactionFees);
+            var feeComparison = x.PublicEntries.Base.TransactionFees.CompareTo(y.TransactionFees);
             if (feeComparison != 0)
             {
                 return feeComparison;
             }
 
-            var timeStampComparison = y.TimeStamp.CompareTo(x.TimeStamp);
+            var timeStampComparison = y.Timestamp.CompareTo(x.Timestamp);
             if (timeStampComparison != 0)
             {
                 return timeStampComparison;

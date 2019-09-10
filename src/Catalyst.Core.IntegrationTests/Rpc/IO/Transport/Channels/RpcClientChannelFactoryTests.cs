@@ -35,8 +35,11 @@ using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels.Embedded;
@@ -69,7 +72,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Transport.Channels
 
             var signatureContextProvider = Substitute.For<ISigningContextProvider>();
             signatureContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
-            signatureContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
+            signatureContextProvider.Network.Returns(NetworkType.Devnet);
 
             _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
 

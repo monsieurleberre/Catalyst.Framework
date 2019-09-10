@@ -21,14 +21,28 @@
 
 #endregion
 
-namespace Catalyst.Protocol.Common
+using System.Reflection;
+using Serilog;
+
+namespace Catalyst.Protocol.Transaction
 {
-    public partial class SigningContext
+    public partial class ConfidentialEntry
     {
-        partial void OnConstruction()
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
+        public bool IsValid
         {
-            Network = Network.Devnet;
-            SignatureType = SignatureType.TransactionPublic;
+            get
+            {
+                var emptyPedersenCommitment = PedersenCommitment.IsEmpty;
+                if (emptyPedersenCommitment)
+                {
+                    Logger.Debug("{field} cannot be empty", nameof(PedersenCommitment));
+                    return false;
+                }
+
+                return RangeProof.IsValid;
+            }
         }
     }
 }

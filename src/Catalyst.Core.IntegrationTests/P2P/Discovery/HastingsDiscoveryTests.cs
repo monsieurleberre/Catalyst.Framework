@@ -39,9 +39,10 @@ using Catalyst.Core.P2P.Discovery.Hastings;
 using Catalyst.Core.P2P.IO.Messaging.Dto;
 using Catalyst.Core.P2P.IO.Observers;
 using Catalyst.Core.UnitTests.P2P.Discovery;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
@@ -58,7 +59,7 @@ namespace Catalyst.Core.IntegrationTests.P2P.Discovery
     {
         public HastingsDiscoveryTests(ITestOutputHelper output) : base(output, new[]
         {
-            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet))
+            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(NetworkType.Devnet))
         })
         {
             _testScheduler = new TestScheduler();

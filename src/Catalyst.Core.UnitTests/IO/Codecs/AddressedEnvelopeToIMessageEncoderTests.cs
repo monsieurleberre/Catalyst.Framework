@@ -24,7 +24,6 @@
 using Catalyst.Core.IO.Codecs;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Extensions;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
@@ -45,7 +44,7 @@ namespace Catalyst.Core.UnitTests.IO.Codecs
         [Fact]
         public void Can_Encode_Signed_Message_Dto_To_Protocol_Message_Signed()
         {
-            var messageDto = new SignedMessageDto(new ProtocolMessageSigned
+            var messageDto = new SignedMessageDto(new ProtocolMessage
                 {
                     Message = new ProtocolMessage
                     {
@@ -57,7 +56,7 @@ namespace Catalyst.Core.UnitTests.IO.Codecs
             _testChannel.WriteOutbound(messageDto);
             var outboundMessages = _testChannel.OutboundMessages.ToArray();
             outboundMessages.Length.Should().Be(1);
-            outboundMessages[0].Should().BeAssignableTo<ProtocolMessageSigned>();
+            outboundMessages[0].Should().BeAssignableTo<ProtocolMessage>();
         }
     }
 }

@@ -30,7 +30,8 @@ using Catalyst.Core.Cryptography;
 using Catalyst.Core.Keystore;
 using Catalyst.Core.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Multiformats.Hash.Algorithms;
@@ -109,7 +110,7 @@ namespace Catalyst.Core.IntegrationTests.KeySigner
             var signature = _keySigner.Sign(toSign, new SigningContext());
             var signingContext = new SigningContext
             {
-                Network = Protocol.Common.Network.Mainnet,
+                NetworkType = NetworkType.Mainnet,
                 SignatureType = SignatureType.ProtocolRpc
             };
 
@@ -124,7 +125,7 @@ namespace Catalyst.Core.IntegrationTests.KeySigner
 
             var signingContext = new SigningContext
             {
-                Network = Protocol.Common.Network.Mainnet,
+                NetworkType = NetworkType.Mainnet,
                 SignatureType = SignatureType.ProtocolRpc
             };
             var signature = _keySigner.Sign(toSign, signingContext);

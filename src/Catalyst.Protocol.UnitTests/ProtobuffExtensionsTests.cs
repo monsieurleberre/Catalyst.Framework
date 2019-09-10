@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
@@ -35,7 +34,7 @@ namespace Catalyst.Protocol.UnitTests
         [Fact]
         public void Can_Identify_Broadcast_Message()
         {
-            var protocolMessageSigned = new ProtocolMessageSigned
+            var ProtocolMessage = new ProtocolMessage
             {
                 Message = new ProtocolMessage
                 {
@@ -46,8 +45,8 @@ namespace Catalyst.Protocol.UnitTests
 
             var protocolMessage = new ProtocolMessage
             {
-                Value = protocolMessageSigned.ToByteString(),
-                TypeUrl = ProtocolMessageSigned.Descriptor.ShortenedFullName()
+                Value = ProtocolMessage.ToByteString(),
+                TypeUrl = ProtocolMessage.Descriptor.ShortenedFullName()
             };
 
             protocolMessage.IsBroadCastMessage().Should().BeTrue();

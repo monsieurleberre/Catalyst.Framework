@@ -26,7 +26,6 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.UnitTests.IO.Messaging.Correlation;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Microsoft.Reactive.Testing;
 using NSubstitute;

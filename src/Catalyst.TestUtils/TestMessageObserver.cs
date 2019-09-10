@@ -28,7 +28,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.IO.Observers;
 using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using NSubstitute;

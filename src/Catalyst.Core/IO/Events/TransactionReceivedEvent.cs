@@ -31,6 +31,7 @@ using Catalyst.Core.Mempool.Documents;
 using Catalyst.Protocol.Interfaces.Validators;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Serilog;
 
 namespace Catalyst.Core.IO.Events

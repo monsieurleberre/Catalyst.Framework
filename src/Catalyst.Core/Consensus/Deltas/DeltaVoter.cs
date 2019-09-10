@@ -31,7 +31,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Utils;
 using Catalyst.Core.P2P;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;

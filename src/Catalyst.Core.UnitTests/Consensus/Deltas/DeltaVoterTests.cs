@@ -34,6 +34,7 @@ using Catalyst.Core.Consensus.Deltas;
 using Catalyst.Core.Extensions;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Extensions;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;

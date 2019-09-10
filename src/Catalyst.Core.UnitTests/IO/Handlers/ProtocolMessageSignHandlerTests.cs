@@ -31,7 +31,6 @@ using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -59,8 +58,8 @@ namespace Catalyst.Core.UnitTests.IO.Handlers
             _signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.SignatureLength));
             _signature.PublicKeyBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.PublicKeyLength));
 
-            peerSettings.Network.Returns(Protocol.Common.Network.Devnet);
-            _signatureContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
+            peerSettings.Network.Returns(NetworkType.Devnet);
+            _signatureContextProvider.Network.Returns(NetworkType.Devnet);
             _signatureContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
 
             _dto = new MessageDto(new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId),

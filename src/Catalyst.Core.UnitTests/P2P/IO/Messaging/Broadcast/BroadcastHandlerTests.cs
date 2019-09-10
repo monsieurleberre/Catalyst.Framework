@@ -33,7 +33,6 @@ using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
@@ -51,7 +50,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Broadcast
         private readonly IBroadcastManager _fakeBroadcastManager;
         private readonly BroadcastHandler _broadcastHandler;
         private readonly IKeySigner _keySigner;
-        private readonly ProtocolMessageSigned _broadcastMessageSigned;
+        private readonly ProtocolMessage _broadcastMessageSigned;
         private readonly ISigningContextProvider _signingContextProvider;
 
         public BroadcastHandlerTests()
@@ -66,9 +65,9 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Broadcast
 
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
             _broadcastMessageSigned =
-                new ProtocolMessageSigned
+                new ProtocolMessage
                 {
-                    Message = new ProtocolMessageSigned
+                    Message = new ProtocolMessage
                     {
                         Message = new TransactionBroadcast().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
                         Signature = fakeSignature.SignatureBytes.ToByteString()
@@ -76,7 +75,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Broadcast
                     Signature = fakeSignature.SignatureBytes.ToByteString()
                 };
             _signingContextProvider = Substitute.For<ISigningContextProvider>();
-            _signingContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
+            _signingContextProvider.Network.Returns(NetworkType.Devnet);
             _signingContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
         }
 
@@ -98,7 +97,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Broadcast
             channel.WriteInbound(_broadcastMessageSigned);
 
             await _fakeBroadcastManager.Received(Quantity.Exactly(1))
-               .ReceiveAsync(Arg.Any<ProtocolMessageSigned>());
+               .ReceiveAsync(Arg.Any<ProtocolMessage>());
         }
 
         [Fact]

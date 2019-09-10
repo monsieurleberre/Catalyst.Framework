@@ -34,6 +34,7 @@ using Catalyst.Core.Extensions;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
@@ -84,7 +85,7 @@ namespace Catalyst.Core.Consensus.Deltas
             var salt = GetSaltFromPreviousDelta(previousDeltaHash);
 
             var rawAndSaltedEntriesBySignature = includedTransactions.SelectMany(
-                t => t.STEntries.Select(e => new RawEntryWithSaltedAndHashedEntry(e, salt, _hashAlgorithm)));
+                t => t.PublicEntries.Select(e => new RawEntryWithSaltedAndHashedEntry(e, salt, _hashAlgorithm)));
 
             // (Eα;Oα)
             var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
@@ -94,21 +95,20 @@ namespace Catalyst.Core.Consensus.Deltas
 
             // dn
             var signaturesInOrder = includedTransactions
-               .Select(p => p.Signature.ToByteArray())
+               .Select(p => p.ToByteArray())
                .OrderBy(s => s, ByteUtil.ByteListComparer.Default)
                .SelectMany(b => b)
                .ToArray();
 
             // xf
             var summedFees = includedTransactions
-               .Sum(t => t.TransactionFees);
+               .Sum(t => t.PublicEntries.Sum(e => e.Base.TransactionFees));
 
             //∆Ln,j = L(f/E) + dn + E(xf, j)
             var coinbaseEntry = new CoinbaseEntry
             {
                 Amount = summedFees,
-                PubKey = _producerUniqueId.PublicKey.ToByteString(),
-                Version = 1
+                PublicKey = _producerUniqueId.PeerId.PublicKey
             };
             var globalLedgerStateUpdate = shuffledEntriesBytes
                .Concat(signaturesInOrder)
@@ -132,9 +132,8 @@ namespace Catalyst.Core.Consensus.Deltas
             {
                 PreviousDeltaDfsHash = previousDeltaHash.ToByteString(),
                 MerkleRoot = candidate.Hash,
-                CBEntries = {coinbaseEntry},
-                STEntries = {includedTransactions.SelectMany(t => t.STEntries)},
-                Version = 1,
+                CoinbaseEntries = {coinbaseEntry},
+                PublicEntries = {includedTransactions.SelectMany(t => t.PublicEntries)},
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
 
@@ -153,10 +152,10 @@ namespace Catalyst.Core.Consensus.Deltas
 
         private sealed class RawEntryWithSaltedAndHashedEntry
         {
-            public STTransactionEntry RawEntry { get; }
+            public PublicEntry RawEntry { get; }
             public byte[] SaltedAndHashedEntry { get; }
 
-            public RawEntryWithSaltedAndHashedEntry(STTransactionEntry rawEntry, IEnumerable<byte> salt, IMultihashAlgorithm hashAlgorithm)
+            public RawEntryWithSaltedAndHashedEntry(PublicEntry rawEntry, IEnumerable<byte> salt, IMultihashAlgorithm hashAlgorithm)
             {
                 RawEntry = rawEntry;
                 SaltedAndHashedEntry = rawEntry.ToByteArray().Concat(salt).ComputeRawHash(hashAlgorithm);
@@ -172,8 +171,7 @@ namespace Catalyst.Core.Consensus.Deltas
             //lock time equals 0 or less than ledger cycle time
             //we assume all transactions are of type non-confidential for now
 
-            var validTransactionsForDelta = allTransactions.Where(m => m.LockTime <= 0 
-             && m.TransactionType == TransactionType.Normal).ToList();
+            var validTransactionsForDelta = allTransactions.Where(m => m.PublicEntries.Any()).ToList();
             var rejectedTransactions = allTransactions.Except(validTransactionsForDelta);
             _logger.Debug("Delta builder rejected the following transactions {rejectedTransactions}", rejectedTransactions);
             return validTransactionsForDelta;

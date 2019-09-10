@@ -30,7 +30,6 @@ using Catalyst.Core.Extensions;
 using Catalyst.Core.Mempool.Documents;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;

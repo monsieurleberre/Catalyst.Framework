@@ -27,6 +27,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Catalyst.Abstractions.Config;
+using Catalyst.Protocol.Network;
 using Dawn;
 
 namespace Catalyst.Core.Config
@@ -35,7 +36,7 @@ namespace Catalyst.Core.Config
     {
         /// <inheritdoc />
         public void RunConfigStartUp(string dataDir,
-            Protocol.Common.Network network = Protocol.Common.Network.Devnet,
+            NetworkType network = NetworkType.Devnet,
             string sourceFolder = null,
             bool overwrite = false,
             string overrideNetworkFile = null)
@@ -83,7 +84,7 @@ namespace Catalyst.Core.Config
             }
         }
 
-        protected virtual IEnumerable<string> RequiredConfigFiles(Protocol.Common.Network network,
+        protected virtual IEnumerable<string> RequiredConfigFiles(NetworkType network,
             string overrideNetworkFile = null)
         {
             var requiredConfigFiles = new[]

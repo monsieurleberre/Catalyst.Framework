@@ -36,7 +36,6 @@ using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.EventLoop;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.P2P;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;

@@ -40,6 +40,7 @@ using Catalyst.Core.P2P;
 using Catalyst.Core.P2P.IO.Transport.Channels;
 using Catalyst.Core.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
@@ -59,7 +60,7 @@ namespace Catalyst.Core.IntegrationTests.P2P
         {
             Constants.ComponentsJsonConfigFile,
             Constants.SerilogJsonConfigFile,
-            Constants.NetworkConfigFile(Protocol.Common.Network.Devnet)
+            Constants.NetworkConfigFile(NetworkType.Devnet)
         }.Select(f => Path.Combine(Constants.ConfigSubFolder, f)))
         {
             ContainerProvider.ConfigureContainerBuilder(true, true);

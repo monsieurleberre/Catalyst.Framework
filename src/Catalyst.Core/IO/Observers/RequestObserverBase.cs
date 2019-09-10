@@ -31,7 +31,7 @@ using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.P2P;
 using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;

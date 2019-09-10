@@ -21,14 +21,16 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Abstractions.P2P
 {
     /// <summary>
     /// Validates the PeerId object
     /// </summary>
+    [Obsolete("Use PeerId.IsValid field")]
     public interface IPeerIdValidator
     {
         /// <summary>Validates the peer.</summary>

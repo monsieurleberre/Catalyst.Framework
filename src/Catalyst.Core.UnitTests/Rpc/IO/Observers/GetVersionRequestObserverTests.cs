@@ -28,7 +28,6 @@ using Catalyst.Core.Extensions;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Core.Util;
 using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;

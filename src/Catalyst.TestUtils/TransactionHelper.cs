@@ -22,7 +22,9 @@
 #endregion
 
 using Catalyst.Protocol;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.TestUtils
@@ -31,42 +33,29 @@ namespace Catalyst.TestUtils
     {
         public static TransactionBroadcast GetTransaction(uint standardAmount = 123,
             string standardPubKey = "standardPubKey",
-            string signature = "signature",
-            string confidentialCommitment = "confidentialCommitment",
-            string confidentialPubKey = "confidentialPubKey",
-            TransactionType transactionType = TransactionType.Normal,
+            TransactionType transactionType = TransactionType.Public,
             long timeStamp = 12345,
-            ulong transactionFees = 2,
-            ulong lockTime = 9876)
+            ulong transactionFees = 2)
         {
             var transaction = new TransactionBroadcast
             {
-                STEntries =
+                PublicEntries =
                 {
-                    new STTransactionEntry
+                    new PublicEntry
                     {
                         Amount = standardAmount,
-                        PubKey = standardPubKey.ToUtf8ByteString()
+                        Base = new BaseEntry
+                        {
+                            Sender = new PublicKey {RawBytes = standardPubKey.ToUtf8ByteString()},
+                            TransactionFees = transactionFees
+                        }
                     }
                 },
-                CFEntries =
-                {
-                    new CFTransactionEntry
-                    {
-                        PedersenCommit = confidentialCommitment.ToUtf8ByteString(),
-                        PubKey = confidentialPubKey.ToUtf8ByteString()
-                    }
-                },
-                Signature = signature.ToUtf8ByteString(),
-                TransactionType = transactionType,
-
-                TimeStamp = new Timestamp
+                
+                Timestamp = new Timestamp
                 {
                     Seconds = timeStamp
-                },
-              
-                TransactionFees = transactionFees,
-                LockTime = lockTime
+                }
             };
             return transaction;
         }

@@ -21,11 +21,11 @@
 
 #endregion
 
-using System.Linq;
+using System;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Interfaces.Validators;
-using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Serilog;
 
@@ -43,7 +43,7 @@ namespace Catalyst.Protocol.Validators
             _logger = logger;
         }
 
-        public bool ValidateTransaction(TransactionBroadcast transactionBroadcast, Network network)
+        public bool ValidateTransaction(TransactionBroadcast transactionBroadcast, NetworkType network)
         {
             return ValidateTransactionFields(transactionBroadcast)
              && CheckContractInputFields(transactionBroadcast)
@@ -52,153 +52,34 @@ namespace Catalyst.Protocol.Validators
              && ValidateTransactionSignature(transactionBroadcast, network);
         }
 
-        private bool CheckContractInputFields(TransactionBroadcast transactionBroadcast)
+        private bool CheckContractInputFields(TransactionBroadcast transaction)
         {
-            if (transactionBroadcast.Data != ByteString.Empty && transactionBroadcast.Init != ByteString.Empty)
-            {
-                _logger.Error("Cannot deploy smart contract & contain call data.");
-                return false;
-            }
-
-            if (transactionBroadcast.Init != ByteString.Empty
-             && (transactionBroadcast.STEntries.Any() || transactionBroadcast.CFEntries.Any()))
-            {
-                _logger.Error("Contract deployment cannot contain any entries.");
-                return false;
-            }
-
-            return true;
+            throw new NotImplementedException();
         }
 
         private bool ValidateTransactionFields(TransactionBroadcast transactionBroadcast)
         {
-            if (!CheckKeySize(transactionBroadcast.From))
-            {
-                _logger.Error($"Invalid public key on field {nameof(transactionBroadcast.From)}");
-                return false;
-            }
-
-            if (transactionBroadcast.TimeStamp == null)
-            {
-                _logger.Error("Transaction timestamp is null");
-                return false;
-            }
-
-            var isEmptyPublicTransaction = transactionBroadcast.TransactionType == TransactionType.Normal &&
-                transactionBroadcast.STEntries.Count == 0;
-            var isEmptyConfidentialTransaction = transactionBroadcast.TransactionType == TransactionType.Confidential &&
-                transactionBroadcast.CFEntries.Count == 0;
-            var isEmptySmartContractDeployment = transactionBroadcast.Init == ByteString.Empty;
-
-            if (isEmptySmartContractDeployment 
-             && (isEmptyPublicTransaction || isEmptyConfidentialTransaction))
-            {
-                _logger.Error("No Entries exist in the transaction");
-                return false;
-            }
-
-            if (transactionBroadcast.TransactionType == TransactionType.Normal && transactionBroadcast.CFEntries.Any())
-            {
-                _logger.Information($"Normal transactions cannot contain any {nameof(transactionBroadcast.CFEntries)}");
-                return false;
-            }
-
-            if (transactionBroadcast.TransactionType == TransactionType.Confidential &&
-                transactionBroadcast.STEntries.Any())
-            {
-                _logger.Information($"Normal transactions cannot contain any {nameof(transactionBroadcast.STEntries)}");
-                return false;
-            }
-
-            return true;
+            throw new NotImplementedException();
         }
 
-        private bool ValidateTransactionSignature(TransactionBroadcast transactionBroadcast, Network network)
+        private bool ValidateTransactionSignature(TransactionBroadcast transactionBroadcast, NetworkType network)
         {
-            if (transactionBroadcast.Signature == ByteString.Empty)
-            {
-                _logger.Error("Transaction signature is null");
-                return false;
-            }
-
-            var transactionSignature = _cryptoContext.SignatureFromBytes(transactionBroadcast.Signature.ToByteArray(), 
-                transactionBroadcast.From.ToByteArray());
-            var transactionWithoutSig = transactionBroadcast.Clone();
-            transactionWithoutSig.Signature = ByteString.Empty;
-
-            var signingContext = new SigningContext
-            {
-                SignatureType = transactionBroadcast.TransactionType == TransactionType.Normal 
-                    ? SignatureType.TransactionPublic 
-                    : SignatureType.TransactionConfidential,
-                Network = network
-            };
-
-            if (!_cryptoContext.StdVerify(transactionSignature, transactionWithoutSig.ToByteArray(), signingContext.ToByteArray()))
-            {
-                _logger.Information(
-                    "Transaction Signature {signature} invalid.",
-                    transactionSignature);
-                return false;
-            }
-
-            return true;
+            throw new NotImplementedException();
         }
 
         private bool CheckCfEntries(TransactionBroadcast transactionBroadcast)
         {
-            if (transactionBroadcast.CFEntries.Count <= 0)
-            {
-                return true;
-            }
-
-            foreach (var cfTransactionEntry in transactionBroadcast.CFEntries)
-            {
-                if (!CheckKeySize(cfTransactionEntry.PubKey))
-                {
-                    _logger.Error($"Invalid public key on field {nameof(cfTransactionEntry.PubKey)}");
-                    return false;
-                }
-
-                if (cfTransactionEntry.PedersenCommit == ByteString.Empty)
-                {
-                    _logger.Error($"Invalid field {nameof(cfTransactionEntry.PedersenCommit)}");
-                    return false;
-                }
-            }
-
-            return true;
+            throw new NotImplementedException();
         }
 
         private bool CheckStEntries(TransactionBroadcast transactionBroadcast)
         {
-            if (transactionBroadcast.STEntries.Count <= 0)
-            {
-                return true;
-            }
-
-            foreach (var stTransactionEntry in transactionBroadcast.STEntries)
-            {
-                if (!CheckKeySize(stTransactionEntry.PubKey))
-                {
-                    _logger.Error($"Invalid public key on field {nameof(stTransactionEntry.PubKey)}");
-                    return false;
-                }
-
-                if (transactionBroadcast.Data == ByteString.Empty && stTransactionEntry.Amount <= 0)
-                {
-                    _logger.Error(
-                        $"Invalid amount on field {nameof(stTransactionEntry.Amount)}, Amount: {stTransactionEntry.Amount}");
-                    return false;
-                }
-            }
-
-            return true;
+            throw new NotImplementedException();
         }
 
         private bool CheckKeySize(ByteString publicKey)
         {
-            return publicKey.Length == _cryptoContext.PublicKeyLength;
+            throw new NotImplementedException();
         }
     }
 }

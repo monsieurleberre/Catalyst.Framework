@@ -30,8 +30,9 @@ using Catalyst.Core.Config;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -56,7 +57,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
             _testScheduler = new TestScheduler();
             _config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet)))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(NetworkType.Devnet)))
                .Build();
             
             _logger = Substitute.For<ILogger>();

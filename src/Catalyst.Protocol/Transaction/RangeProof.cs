@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,25 +21,24 @@
 
 #endregion
 
-using System.IO;
+using System.Reflection;
+using Serilog;
 
-namespace Catalyst.Protocol.Deltas
+namespace Catalyst.Protocol.Transaction
 {
-    public sealed partial class FavouriteDeltaBroadcast
+    public partial class RangeProof
     {
-        public bool IsValid()
+        public static RangeProof None = new RangeProof();
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
+        public bool IsValid
         {
-            if (Candidate == null || !Candidate.IsValid())
+            get
             {
-                throw new InvalidDataException($"{nameof(Candidate)} is not valid");
+                if (!Equals(None)) {return true;}
+                Logger.Debug("{instance} cannot have default value", nameof(RangeProof));
+                return false;
             }
-
-            if (this.VoterId == null)
-            {
-                throw new InvalidDataException($"{nameof(VoterId)} cannot be null");
-            }
-
-            return true;
         }
     }
 }

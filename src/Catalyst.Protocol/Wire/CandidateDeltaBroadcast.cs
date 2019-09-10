@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -22,29 +22,36 @@
 #endregion
 
 using System.IO;
+using System.Reflection;
+using Serilog;
 
-namespace Catalyst.Protocol.Deltas
+namespace Catalyst.Protocol.Wire
 {
     public sealed partial class CandidateDeltaBroadcast
     {
-        public bool IsValid()
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
+        public bool IsValid
         {
-            if (ProducerId == null)
+            get
             {
-                throw new InvalidDataException($"{nameof(ProducerId)} cannot be null");
-            }
+                if (ProducerId == null)
+                {
+                    Logger.Debug("{field} cannot be null", nameof(ProducerId));
+                }
 
-            if (PreviousDeltaDfsHash == null || PreviousDeltaDfsHash.IsEmpty)
-            {
-                throw new InvalidDataException($"{nameof(PreviousDeltaDfsHash)} cannot be null or empty");
-            }
+                if (PreviousDeltaDfsHash == null || PreviousDeltaDfsHash.IsEmpty)
+                {
+                    Logger.Debug("{field} cannot be null or empty", nameof(PreviousDeltaDfsHash));
+                }
 
-            if (Hash == null || Hash.IsEmpty)
-            {
-                throw new InvalidDataException($"{nameof(Hash)} cannot be null or empty");
-            }
+                if (Hash == null || Hash.IsEmpty)
+                {
+                    Logger.Debug("{field} cannot be null or empty", nameof(Hash));
+                }
 
-            return true;
+                return true;
+            }
         }
     }
 }

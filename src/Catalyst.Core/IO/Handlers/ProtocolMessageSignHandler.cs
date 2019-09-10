@@ -27,8 +27,9 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Extensions;
+using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
@@ -47,7 +48,7 @@ namespace Catalyst.Core.IO.Handlers
             _keySigner = keySigner;
             _signingContext = new SigningContext
             {
-                Network = signingContextProvider.Network,
+                NetworkType = signingContextProvider.Network,
                 SignatureType = signingContextProvider.SignatureType
             };
         }
@@ -64,13 +65,13 @@ namespace Catalyst.Core.IO.Handlers
             
             var sig = _keySigner.Sign(message.Content.ToByteArray(), _signingContext);
             
-            var protocolMessageSigned = new ProtocolMessageSigned
+            var ProtocolMessage = new ProtocolMessage
             {
                 Signature = sig.SignatureBytes.ToByteString(),
-                Message = message.Content
+                Value = message.Content.ToByteString()
             };
 
-            var signedDto = new SignedMessageDto(protocolMessageSigned, message.RecipientPeerIdentifier);
+            var signedDto = new SignedMessageDto(ProtocolMessage, message.RecipientPeerIdentifier);
 
             return context.WriteAsync(signedDto);
         }

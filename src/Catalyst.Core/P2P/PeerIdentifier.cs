@@ -33,8 +33,9 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Network;
 using Catalyst.Core.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Extensions;
+using Catalyst.Protocol.Peer;
 using Dawn;
 using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
@@ -52,19 +53,20 @@ namespace Catalyst.Core.P2P
     /// <summary>
     ///     @TODO move to SDK
     /// </summary>
+    [Obsolete("This is getting replaced by methods on the PeerId class produced from the protobuf definitions")]
     public sealed class PeerIdentifier : IPeerIdentifier
     {
         public static char PidDelimiter => '|';
         public PeerId PeerId { get; }
         public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray()).MapToIPv4();
-        public int Port => BitConverter.ToUInt16(PeerId.Port.ToByteArray());
+        public int Port => (int) PeerId.Port;
         public byte[] PublicKey => PeerId.PublicKey.ToByteArray();
         public IPEndPoint IpEndPoint => EndpointBuilder.BuildNewEndPoint(Ip, Port);
         
         public PeerIdentifier(PeerId peerId)
         {
             var keyLength = FFI.PublicKeyLength;
-            Guard.Argument(peerId.PublicKey, nameof(peerId.PublicKey)).MinCount(keyLength).MaxCount(keyLength);
+            Guard.Argument(peerId.PublicKey.RawBytes, nameof(peerId.PublicKey)).MinCount(keyLength).MaxCount(keyLength);
             PeerId = peerId;
         }
 
@@ -117,8 +119,8 @@ namespace Catalyst.Core.P2P
             {
                 ProtocolVersion = peerByteChunks[1],
                 Ip = IPAddress.Parse(rawPidChunks[2]).MapToIPv4().To16Bytes().ToByteString(),
-                Port = peerByteChunks[3],
-                PublicKey = peerByteChunks[4]
+                Port = BitConverter.ToUInt32(peerByteChunks[3].ToByteArray()),
+                PublicKey = new PublicKey() {RawBytes = peerByteChunks[4]}
             });
         }
 
@@ -137,8 +139,8 @@ namespace Catalyst.Core.P2P
         {
             PeerId = new PeerId
             {
-                PublicKey = publicKey.ToByteString(),
-                Port = BitConverter.GetBytes(endPoint.Port).ToByteString(),
+                PublicKey = new PublicKey {RawBytes = publicKey.ToByteString()},
+                Port = (uint) endPoint.Port,
                 Ip = endPoint.Address.To16Bytes().ToByteString()
             };
         }

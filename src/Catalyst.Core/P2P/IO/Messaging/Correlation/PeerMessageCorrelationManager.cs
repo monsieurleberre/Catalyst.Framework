@@ -35,7 +35,6 @@ using Catalyst.Abstractions.Util;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.P2P.ReputationSystem;
-using Catalyst.Protocol.Common;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;

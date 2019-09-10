@@ -33,6 +33,7 @@ using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Extensions;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Multiformats.Hash;

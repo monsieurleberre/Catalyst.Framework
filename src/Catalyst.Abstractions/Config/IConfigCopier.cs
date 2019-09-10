@@ -21,6 +21,8 @@
 
 #endregion
 
+using Catalyst.Protocol.Network;
+
 namespace Catalyst.Abstractions.Config
 {
     public interface IConfigCopier
@@ -33,8 +35,9 @@ namespace Catalyst.Abstractions.Config
         /// <param name="network">Network on which to run the node</param>
         /// <param name="sourceFolder"></param>
         /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
+        /// <param name="overrideNetworkFile">Name of the file used to ovewrite the network file</param>
         void RunConfigStartUp(string dataDir, 
-            Protocol.Common.Network network = Protocol.Common.Network.Devnet, 
+            NetworkType network = NetworkType.Devnet, 
             string sourceFolder = null, 
             bool overwrite = false, 
             string overrideNetworkFile = null);

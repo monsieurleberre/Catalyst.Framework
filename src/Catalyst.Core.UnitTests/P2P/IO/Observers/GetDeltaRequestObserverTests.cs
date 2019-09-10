@@ -31,7 +31,6 @@ using Catalyst.Core.Config;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.Rpc.Node;

@@ -24,7 +24,7 @@
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.P2P;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.IO.Messaging.Dto
 {

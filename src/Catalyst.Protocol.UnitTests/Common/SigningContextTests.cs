@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Protocol.Common;
 using FluentAssertions;
 using Xunit;
 

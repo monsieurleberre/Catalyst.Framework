@@ -31,9 +31,9 @@ using Catalyst.Core.P2P.Models;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -109,7 +109,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
             responseContent.PublicKey.Should().BeNullOrEmpty();
         }
 
-        private SetPeerBlackListResponse ApplyBlackListingToPeerTest(string publicKey, string ipAddress, string blacklist)
+        private SetPeerBlacklistResponse ApplyBlackListingToPeerTest(string publicKey, string ipAddress, string blacklist)
         {
             var testScheduler = new TestScheduler();
             var peerRepository = Substitute.For<IPeerRepository>();
@@ -136,7 +136,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var request = new SetPeerBlackListRequest
+            var request = new SetPeerBlacklistRequest
             {
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
                 Ip = ipAddress.ToBytesForRLPEncoding().ToByteString(),
@@ -158,7 +158,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
             
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
             
-            return sentResponseDto.Content.FromProtocolMessage<SetPeerBlackListResponse>();
+            return sentResponseDto.Content.FromProtocolMessage<SetPeerBlacklistResponse>();
         }
     }
 }

@@ -24,6 +24,7 @@
 using System.Collections.Generic;
 using Catalyst.Common.Utils;
 using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Consensus.Deltas

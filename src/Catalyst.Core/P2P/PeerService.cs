@@ -32,7 +32,7 @@ using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Core.IO.Transport;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Serilog;
 
 namespace Catalyst.Core.P2P

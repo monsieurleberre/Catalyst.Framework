@@ -33,9 +33,11 @@ using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Extensions;
+using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -61,7 +63,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
         {
             Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet)),
+            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(NetworkType.Devnet)),
             Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile)
         })
         {
@@ -95,7 +97,8 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
             //results in an empty context, which is the only way we can use rfc test vectors to test the VerifyMessageRequestObserver. 
             var signingContext = new SigningContext
             {
-                Network = Protocol.Common.Network.Unknown, SignatureType = SignatureType.Unknown
+                NetworkType = NetworkType.Unknown,
+                SignatureType = SignatureType.Unknown
             };
 
             var verifyMessageRequest = new VerifyMessageRequest
@@ -105,6 +108,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
                 Signature = RLP.EncodeElement(signatureBytes.ToArray()).ToByteString(),
                 SigningContext = signingContext
             };
+
             var protocolMessage =
                 verifyMessageRequest.ToProtocolMessage(sender.PeerId);
 
@@ -136,7 +140,8 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var signingContext = new SigningContext
             {
-                Network = Protocol.Common.Network.Devnet, SignatureType = SignatureType.ProtocolRpc
+                NetworkType = NetworkType.Devnet,
+                SignatureType = SignatureType.ProtocolRpc
             };
 
             var message = "something something something";

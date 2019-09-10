@@ -38,8 +38,8 @@ namespace Catalyst.Core.P2P
     public sealed class PeerSettings
         : IPeerSettings
     {
-        private readonly Protocol.Common.Network _network;
-        public Protocol.Common.Network Network => _network;
+        private readonly NetworkType _network;
+        public NetworkType Network => _network;
         public string PublicKey { get; }
         public int Port { get; }
         public string PayoutAddress { get; }

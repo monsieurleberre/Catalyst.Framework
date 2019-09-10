@@ -25,14 +25,15 @@ using System.Reflection;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Core.IO.Handlers
 {
-    public sealed class ProtocolMessageVerifyHandler : InboundChannelHandlerBase<ProtocolMessageSigned>
+    public sealed class ProtocolMessageVerifyHandler : InboundChannelHandlerBase<ProtocolMessage>
     {
         private readonly IKeySigner _keySigner;
         private readonly SigningContext _signingContext;
@@ -43,12 +44,12 @@ namespace Catalyst.Core.IO.Handlers
             _keySigner = keySigner;
             _signingContext = new SigningContext
             {
-                Network = signingContextProvider.Network,
+                NetworkType = signingContextProvider.Network,
                 SignatureType = signingContextProvider.SignatureType 
             };
         }
 
-        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessageSigned signedMessage)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage signedMessage)
         {
             Logger.Verbose("Received {msg}", signedMessage);
             if (!Verify(signedMessage))
@@ -59,7 +60,7 @@ namespace Catalyst.Core.IO.Handlers
 
             if (signedMessage.Message.IsBroadCastMessage())
             {
-                var innerSignedMessage = ProtocolMessageSigned.Parser.ParseFrom(signedMessage.Message.Value);
+                var innerSignedMessage = ProtocolMessage.Parser.ParseFrom(signedMessage.Message.Value);
                 if (!Verify(innerSignedMessage))
                 {
                     Logger.Warning("Failed to verify inner signature in broadcast message {msg}.", innerSignedMessage);
@@ -70,7 +71,7 @@ namespace Catalyst.Core.IO.Handlers
             ctx.FireChannelRead(signedMessage.Message);
         }
 
-        private bool Verify(ProtocolMessageSigned signedMessage)
+        private bool Verify(ProtocolMessage signedMessage)
         {
             var sig = signedMessage.Signature.ToByteArray();
             var pub = signedMessage.Message.PeerId.PublicKey.ToByteArray();

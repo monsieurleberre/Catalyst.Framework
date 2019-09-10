@@ -27,7 +27,6 @@ using Catalyst.Common.Utils;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -46,7 +45,7 @@ namespace Catalyst.Core.UnitTests.IO.Codecs
         private readonly EmbeddedChannel _channel;
         private readonly IPeerIdentifier _recipientPid;
         private readonly DatagramPacket _datagramPacket;
-        private readonly ProtocolMessageSigned _protocolMessageSigned;
+        private readonly ProtocolMessage _ProtocolMessage;
         
         public DatagramPacketEncoderTests()
         {
@@ -64,14 +63,14 @@ namespace Catalyst.Core.UnitTests.IO.Codecs
                 20000
             );
 
-            _protocolMessageSigned = new ProtocolMessageSigned
+            _ProtocolMessage = new ProtocolMessage
             {
                 Message = new PingRequest().ToProtocolMessage(senderPid.PeerId, CorrelationId.GenerateCorrelationId()),
                 Signature = ByteUtil.GenerateRandomByteArray(64).ToByteString()
             };
             
             _datagramPacket = new DatagramPacket(
-                Unpooled.WrappedBuffer(_protocolMessageSigned.ToByteArray()),
+                Unpooled.WrappedBuffer(_ProtocolMessage.ToByteArray()),
                 senderPid.IpEndPoint,
                 _recipientPid.IpEndPoint
             );
@@ -80,7 +79,7 @@ namespace Catalyst.Core.UnitTests.IO.Codecs
         [Fact]
         public void DatagramPacketEncoder_Can_Encode_IMessage_With_ProtobufEncoder()
         {
-            Assert.True(_channel.WriteOutbound(new SignedMessageDto(_protocolMessageSigned, _recipientPid)));
+            Assert.True(_channel.WriteOutbound(new SignedMessageDto(_ProtocolMessage, _recipientPid)));
 
             var datagramPacket = _channel.ReadOutbound<DatagramPacket>();
             Assert.NotNull(datagramPacket);
@@ -95,11 +94,11 @@ namespace Catalyst.Core.UnitTests.IO.Codecs
         [Fact]
         public void DatagramPacketEncoder_Will_Not_Encode_UnmatchedMessageType()
         {
-            Assert.True(_channel.WriteOutbound(_protocolMessageSigned));
+            Assert.True(_channel.WriteOutbound(_ProtocolMessage));
         
-            var protocolMessageSigned = _channel.ReadOutbound<ProtocolMessageSigned>();
-            Assert.NotNull(protocolMessageSigned);
-            Assert.Same(_protocolMessageSigned, protocolMessageSigned);
+            var ProtocolMessage = _channel.ReadOutbound<ProtocolMessage>();
+            Assert.NotNull(ProtocolMessage);
+            Assert.Same(_ProtocolMessage, ProtocolMessage);
             Assert.False(_channel.Finish());
         }
         

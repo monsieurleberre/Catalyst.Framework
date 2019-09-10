@@ -42,7 +42,6 @@ using Catalyst.Core.P2P.Discovery.Hastings;
 using Catalyst.Core.P2P.IO.Observers;
 using Catalyst.Core.P2P.Models;
 using Catalyst.Core.Util;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;

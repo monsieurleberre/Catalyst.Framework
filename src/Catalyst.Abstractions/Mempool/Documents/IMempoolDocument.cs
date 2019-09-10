@@ -26,8 +26,5 @@ using Catalyst.Abstractions.Repository;
 
 namespace Catalyst.Abstractions.Mempool.Documents
 {
-    public interface IMempoolDocument : IMempoolItem, IDocument
-    {
-        string DocumentId { get; }
-    }
+    public interface IMempoolDocument : IMempoolItem, IDocument { }
 }

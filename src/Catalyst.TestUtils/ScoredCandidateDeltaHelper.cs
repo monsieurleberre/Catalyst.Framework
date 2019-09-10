@@ -22,8 +22,8 @@
 #endregion
 
 using Catalyst.Core.Consensus.Deltas;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.TestUtils

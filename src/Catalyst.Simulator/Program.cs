@@ -27,7 +27,8 @@ using Catalyst.Core.Cli;
 using Catalyst.Core.Cryptography;
 using Catalyst.Core.FileSystem;
 using Catalyst.Core.Keystore;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 using Catalyst.Simulator.Extensions;
 using Catalyst.Simulator.Helpers;
 using Catalyst.Simulator.Simulations;
@@ -53,7 +54,7 @@ namespace Catalyst.Simulator
             var consolePasswordReader = new ConsolePasswordReader(userOutput, userInput);
             var certificateStore = new CertificateStore(fileSystem, new PasswordManager(consolePasswordReader, passwordRegistry));
             var certificate = certificateStore.ReadOrCreateCertificateFile("mycert.pfx");
-            var signingContext = new SigningContextProvider {Network = Network.Devnet, SignatureType = SignatureType.ProtocolPeer};
+            var signingContext = new SigningContextProvider {Network = NetworkType.Devnet, SignatureType = SignatureType.ProtocolPeer};
 
             var clientRpcInfoList =
                 ConfigHelper.GenerateClientRpcInfoFromConfig(userOutput, passwordRegistry, certificate, logger, signingContext

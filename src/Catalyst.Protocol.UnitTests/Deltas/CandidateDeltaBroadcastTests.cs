@@ -21,10 +21,8 @@
 
 #endregion
 
-using System;
-using System.IO;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using FluentAssertions;
 using Google.Protobuf;
 using Xunit;
@@ -62,7 +60,7 @@ namespace Catalyst.Protocol.UnitTests.Deltas
         [ClassData(typeof(InvalidCandidateDeltaBroadCasts))]
         public void CandidateDeltaBroadcast_IsValid_Should_Throw_On_Invalid_CandidateDeltaBroadcast(CandidateDeltaBroadcast candidate)
         {
-            new Action(() => candidate.IsValid()).Should().Throw<InvalidDataException>();
+            candidate.IsValid.Should().BeFalse();
         }
 
         [Fact]
@@ -74,7 +72,7 @@ namespace Catalyst.Protocol.UnitTests.Deltas
                 Hash = ByteString.CopyFromUtf8("yes"),
                 PreviousDeltaDfsHash = ByteString.CopyFromUtf8("bla")
             };
-            candidate.IsValid().Should().BeTrue();
+            candidate.IsValid.Should().BeTrue();
         }
     }
 }

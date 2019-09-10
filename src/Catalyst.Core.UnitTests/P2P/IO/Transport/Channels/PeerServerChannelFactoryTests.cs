@@ -37,13 +37,17 @@ using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.P2P.IO.Transport.Channels;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
+using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
@@ -89,7 +93,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Transport.Channels
             _keySigner = Substitute.For<IKeySigner>();
 
             var signatureContext = Substitute.For<ISigningContextProvider>();
-            signatureContext.Network.Returns(Protocol.Common.Network.Devnet);
+            signatureContext.Network.Returns(NetworkType.Devnet);
             signatureContext.SignatureType.Returns(SignatureType.ProtocolPeer);
 
             var peerValidator = Substitute.For<IPeerIdValidator>();
@@ -131,10 +135,10 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Transport.Channels
 
             var protocolMessage = new PingRequest().ToProtocolMessage(_senderId, _correlationId);
 
-            var signedMessage = new ProtocolMessageSigned
+            var signedMessage = new ProtocolMessage
             {
-                Message = protocolMessage,
-                Signature = _signature.ToByteString()
+                Value = protocolMessage.ToByteString(),
+                Signature = new Signature() _signature.ToByteString()
             };
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
@@ -176,12 +180,12 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Transport.Channels
             }
         }
 
-        private ProtocolMessageSigned GetSignedMessage()
+        private ProtocolMessage GetSignedMessage()
         {
             var protocolMessage = new PeerNeighborsRequest()
                .ToProtocolMessage(_senderId, CorrelationId.GenerateCorrelationId());
 
-            var signedMessage = new ProtocolMessageSigned
+            var signedMessage = new ProtocolMessage
             {
                 Message = protocolMessage,
                 Signature = _signature.ToByteString()

@@ -24,7 +24,7 @@
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
 
 namespace Catalyst.Abstractions.KeySigner
 {

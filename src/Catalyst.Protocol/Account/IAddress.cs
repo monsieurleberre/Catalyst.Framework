@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,13 +21,10 @@
 
 #endregion
 
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Network;
 
-namespace Catalyst.Protocol.Shared
+namespace Catalyst.Protocol.Account
 {
-    //https://github.com/catalyst-network/protobuffs-protocol-sdk-csharp/issues/41
-    //move that to the Utils project after Dennis' project gets created.
-
     /// <summary>
     /// An interface to represent the account addresses used by the ledger. 
     /// </summary>
@@ -36,7 +33,7 @@ namespace Catalyst.Protocol.Shared
         /// <summary>
         /// Network to which the address belongs.
         /// </summary>
-        Network Network { get; }
+        NetworkType Network { get; }
         
         /// <summary>
         /// Is the address an externally owned address or a smart contract address.

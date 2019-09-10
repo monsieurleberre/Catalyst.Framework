@@ -27,7 +27,6 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.IO.Events;
 using Catalyst.Core.Mempool.Documents;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.Interfaces.Validators;
 using Catalyst.Protocol.Rpc.Node;
@@ -52,7 +51,7 @@ namespace Catalyst.Core.UnitTests.IO.Events
         public TransactionReceivedEventTests()
         {
             _peerSettings = Substitute.For<IPeerSettings>();
-            _peerSettings.Network.Returns(Protocol.Common.Network.Devnet);
+            _peerSettings.Network.Returns(NetworkType.Devnet);
 
             _mempool = Substitute.For<IMempool<MempoolDocument>>();
             _transactionValidator = Substitute.For<ITransactionValidator>();

@@ -27,7 +27,6 @@ using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
@@ -57,7 +56,7 @@ namespace Catalyst.Core.UnitTests.Rpc.Authentication
 
             var request = new GetPeerListRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("Test"),
                 CorrelationId.GenerateCorrelationId());
-            var signedMessage = new ProtocolMessageSigned
+            var signedMessage = new ProtocolMessage
             {
                 Message = request,
                 Signature = ByteString.CopyFrom(new byte[64])
@@ -75,7 +74,7 @@ namespace Catalyst.Core.UnitTests.Rpc.Authentication
 
             var request = new GetPeerListRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("Test"),
                 CorrelationId.GenerateCorrelationId());
-            var signedMessage = new ProtocolMessageSigned
+            var signedMessage = new ProtocolMessage
             {
                 Message = request,
                 Signature = ByteString.CopyFrom(new byte[64])

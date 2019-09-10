@@ -25,7 +25,6 @@ using System.Net;
 using Catalyst.Common.Utils;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -42,15 +41,15 @@ namespace Catalyst.Core.UnitTests.IO.Codecs
     public sealed class DatagramPacketDecoderTests
     {
         [Fact]
-        public void DatagramPacketDecoder_Can_Decode_IMessage_With_ProtobufDecoder_And_ProtocolMessageSignedParser()
+        public void DatagramPacketDecoder_Can_Decode_IMessage_With_ProtobufDecoder_And_ProtocolMessageParser()
         {
             var channel = new EmbeddedChannel(
                 new DatagramPacketDecoder(
-                    new ProtobufDecoder(ProtocolMessageSigned.Parser)
+                    new ProtobufDecoder(ProtocolMessage.Parser)
                 )
             );
             
-            var protocolMessageSigned = new ProtocolMessageSigned
+            var ProtocolMessage = new ProtocolMessage
             {
                 Message = new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, 
                     CorrelationId.GenerateCorrelationId()
@@ -60,14 +59,14 @@ namespace Catalyst.Core.UnitTests.IO.Codecs
             };
             
             var datagramPacket = new DatagramPacket(
-                Unpooled.WrappedBuffer(protocolMessageSigned.ToByteArray()),
+                Unpooled.WrappedBuffer(ProtocolMessage.ToByteArray()),
                 new IPEndPoint(IPAddress.Any, IPEndPoint.MinPort),
                 new IPEndPoint(IPAddress.Any, IPEndPoint.MaxPort)
             );
 
             Assert.True(channel.WriteInbound(datagramPacket));
-            var content = channel.ReadInbound<ProtocolMessageSigned>();
-            Assert.Equal(protocolMessageSigned, content);
+            var content = channel.ReadInbound<ProtocolMessage>();
+            Assert.Equal(ProtocolMessage, content);
             Assert.False(channel.Finish());
         }
     }

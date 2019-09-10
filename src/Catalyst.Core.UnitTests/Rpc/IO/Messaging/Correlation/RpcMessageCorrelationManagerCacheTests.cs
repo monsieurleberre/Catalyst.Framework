@@ -29,7 +29,6 @@ using Catalyst.Abstractions.Util;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.Rpc.IO.Messaging.Correlation;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;

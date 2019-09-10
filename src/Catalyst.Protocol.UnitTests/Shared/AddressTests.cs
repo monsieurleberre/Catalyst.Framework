@@ -23,7 +23,6 @@
 
 using System;
 using System.Linq;
-using Catalyst.Protocol.Common;
 using FluentAssertions;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;

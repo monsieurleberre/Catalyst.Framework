@@ -28,7 +28,7 @@ using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Exceptions;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
 using Google.Protobuf;
 
 namespace Catalyst.Core.KeySigner

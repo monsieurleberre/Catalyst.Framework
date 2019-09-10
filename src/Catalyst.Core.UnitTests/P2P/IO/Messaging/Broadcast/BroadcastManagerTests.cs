@@ -35,7 +35,6 @@ using Catalyst.Core.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.P2P.Models;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
@@ -120,7 +119,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Broadcast
             );
 
             var gossipDto =
-                new ProtocolMessageSigned
+                new ProtocolMessage
                 {
                     Message = messageDto.Content.ToProtocolMessage(senderIdentifier.PeerId, messageDto.CorrelationId)
                 };

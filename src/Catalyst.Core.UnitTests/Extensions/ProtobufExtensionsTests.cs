@@ -28,7 +28,6 @@ using Catalyst.Common.Utils;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Rpc.Node;

@@ -24,7 +24,7 @@
 using System.Reflection;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Serilog;
 
@@ -60,11 +60,11 @@ namespace Catalyst.Core.IO.Handlers
             if (msg.IsBroadCastMessage())
             {
                 Logger.Verbose("Broadcast message {msg} received.", msg);
-                var innerGossipMessageSigned = ProtocolMessageSigned.Parser.ParseFrom(msg.Value);
+                var innerGossipMessageSigned = ProtocolMessage.Parser.ParseFrom(msg.Value);
                 _broadcastManager.ReceiveAsync(innerGossipMessageSigned)
                    .ConfigureAwait(false).GetAwaiter().GetResult();
 
-                ctx.FireChannelRead(innerGossipMessageSigned.Message);
+                ctx.FireChannelRead(innerGossipMessageSigned.Value);
                 return;
             }
 

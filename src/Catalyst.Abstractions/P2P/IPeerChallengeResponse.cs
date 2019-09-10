@@ -21,8 +21,6 @@
 
 #endregion
 
-using Catalyst.Protocol.Common;
-
 namespace Catalyst.Abstractions.P2P
 {
     public interface IPeerChallengeResponse

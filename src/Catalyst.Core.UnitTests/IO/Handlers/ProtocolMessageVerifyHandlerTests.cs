@@ -27,7 +27,6 @@ using Catalyst.Common.Utils;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Extensions;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -39,7 +38,7 @@ namespace Catalyst.Core.UnitTests.IO.Handlers
     public sealed class ProtocolMessageVerifyHandlerTests
     {
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly ProtocolMessageSigned _protocolMessageSigned;
+        private readonly ProtocolMessage _ProtocolMessage;
         private readonly IKeySigner _keySigner;
         private readonly ISigningContextProvider _signingContextProvider;
 
@@ -52,7 +51,7 @@ namespace Catalyst.Core.UnitTests.IO.Handlers
             var signatureBytes = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
             var publicKeyBytes = ByteUtil.GenerateRandomByteArray(FFI.PublicKeyLength);
 
-            _protocolMessageSigned = new ProtocolMessageSigned
+            _ProtocolMessage = new ProtocolMessage
             {
                 Signature = signatureBytes.ToByteString(),
                 Message = new ProtocolMessage
@@ -61,7 +60,7 @@ namespace Catalyst.Core.UnitTests.IO.Handlers
                 }
             };
 
-            _signingContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
+            _signingContextProvider.Network.Returns(NetworkType.Devnet);
             _signingContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
         }
 
@@ -73,9 +72,9 @@ namespace Catalyst.Core.UnitTests.IO.Handlers
 
             var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider);
 
-            signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
+            signatureHandler.ChannelRead(_fakeContext, _ProtocolMessage);
 
-            _fakeContext.ReceivedWithAnyArgs().FireChannelRead(_protocolMessageSigned).Received(1);
+            _fakeContext.ReceivedWithAnyArgs().FireChannelRead(_ProtocolMessage).Received(1);
         }
         
         [Fact]
@@ -86,9 +85,9 @@ namespace Catalyst.Core.UnitTests.IO.Handlers
 
             var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider);
 
-            signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
+            signatureHandler.ChannelRead(_fakeContext, _ProtocolMessage);
             
-            _fakeContext.DidNotReceiveWithAnyArgs().FireChannelRead(_protocolMessageSigned).Received(0);
+            _fakeContext.DidNotReceiveWithAnyArgs().FireChannelRead(_ProtocolMessage).Received(0);
         }
     }
 }

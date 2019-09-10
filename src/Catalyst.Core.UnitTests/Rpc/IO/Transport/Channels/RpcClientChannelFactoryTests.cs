@@ -32,7 +32,6 @@ using Catalyst.Core.IO.Codecs;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.Rpc.IO.Transport.Channels;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;
@@ -78,7 +77,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
             _keySigner = Substitute.For<IKeySigner>();
             var contextProvider = Substitute.For<ISigningContextProvider>();
 
-            contextProvider.Network.Returns(Protocol.Common.Network.Devnet);
+            contextProvider.Network.Returns(NetworkType.Devnet);
             contextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
 
             var peerIdValidator = Substitute.For<IPeerIdValidator>();

@@ -38,6 +38,7 @@ using Catalyst.Core.Extensions;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
@@ -158,7 +159,7 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
                 _randomFactory.GetDeterministicRandomFromSeed(_previousDeltaHash).NextInt());
 
             var rawAndSaltedEntriesBySignature = selectedTransactions.SelectMany(
-                t => t.STEntries.Select(e => new
+                t => t.PublicEntries.Select(e => new
                 {
                     RawEntry = e,
                     SaltedAndHashedEntry = e.ToByteArray().Concat(salt).ComputeRawHash(_hashAlgorithm)

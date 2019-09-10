@@ -27,7 +27,6 @@ using System.Net;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Network;
-using Catalyst.Protocol.Common;
 using Dawn;
 
 namespace Catalyst.Core.P2P

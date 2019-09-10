@@ -37,6 +37,7 @@ using Catalyst.Core.FileTransfer;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.P2P;
 using Catalyst.Core.Rpc.IO.Observers;
+using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -60,7 +61,7 @@ namespace Catalyst.Core.IntegrationTests.Dfs
             var configurationRoot = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet)))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(NetworkType.Devnet)))
                .Build();
 
             SocketPortHelper.AlterConfigurationToGetUniquePort(configurationRoot, "NodeFileTransferIntegrationTest");

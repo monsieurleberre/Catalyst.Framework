@@ -28,8 +28,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Common.Extensions;
 using Catalyst.Core.IO.Observers;
 using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
 using Serilog;
 
 namespace Catalyst.Core.Consensus.IO.Observers
@@ -52,9 +51,10 @@ namespace Catalyst.Core.Consensus.IO.Observers
 
                 _ = deserialised.Candidate.PreviousDeltaDfsHash.ToByteArray().AsMultihash();
                 _ = deserialised.Candidate.Hash.ToByteArray().AsMultihash();
-                deserialised.IsValid();
-                
-                _deltaElector.OnNext(deserialised);
+                if (deserialised.IsValid)
+                {
+                    _deltaElector.OnNext(deserialised);
+                }
             }
             catch (Exception exception)
             {

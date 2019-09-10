@@ -40,7 +40,6 @@ using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Codecs;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Transport.Channels;
-using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 
@@ -62,7 +61,7 @@ namespace Catalyst.Core.Rpc.IO.Transport.Channels
                 return () => new List<IChannelHandler>
                 {
                     new ProtobufVarint32FrameDecoder(),
-                    new ProtobufDecoder(ProtocolMessageSigned.Parser),
+                    new ProtobufDecoder(ProtocolMessage.Parser),
                     new ProtobufVarint32LengthFieldPrepender(),
                     new ProtobufEncoder(),
                     new AuthenticationHandler(_authenticationStrategy),

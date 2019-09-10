@@ -27,7 +27,6 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Cryptography;
 using Catalyst.Core.P2P;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Extensions;
 using Catalyst.TestUtils;
 using FluentAssertions;
