@@ -71,9 +71,13 @@ namespace Catalyst.Core.IntegrationTests.P2P.IO.Transport.Channels
             _serverKeySigner = Substitute.For<IKeySigner>();
             var broadcastManager = Substitute.For<IBroadcastManager>();
 
+            var signingContext = new SigningContext
+            {
+                NetworkType = NetworkType.Devnet,
+                SignatureType = SignatureType.ProtocolPeer
+            };
             var signingContextProvider = Substitute.For<ISigningContextProvider>();
-            signingContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
-            signingContextProvider.Network.Returns(NetworkType.Devnet);
+            signingContextProvider.SigningContext.Returns(signingContext);
 
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
 

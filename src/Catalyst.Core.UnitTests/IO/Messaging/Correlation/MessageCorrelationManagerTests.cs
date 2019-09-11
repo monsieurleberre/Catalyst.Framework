@@ -33,6 +33,8 @@ using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Protocol;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -42,7 +44,7 @@ using Microsoft.Extensions.Primitives;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using PendingRequest = Catalyst.Core.IO.Messaging.Correlation.CorrelatableMessage<Catalyst.Protocol.Common.ProtocolMessage>;
+using PendingRequest = Catalyst.Core.IO.Messaging.Correlation.CorrelatableMessage<Catalyst.Protocol.Wire.ProtocolMessage>;
 
 namespace Catalyst.Core.UnitTests.IO.Messaging.Correlation
 {

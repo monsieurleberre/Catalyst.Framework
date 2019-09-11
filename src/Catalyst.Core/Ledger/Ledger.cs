@@ -149,7 +149,7 @@ namespace Catalyst.Core.Ledger
 
         private void UpdateLedgerAccountFromEntry(PublicEntry entry)
         {
-            var pubKey = _cryptoContext.PublicKeyFromBytes(entry.Base.Sender.ToByteArray());
+            var pubKey = _cryptoContext.PublicKeyFromBytes(entry.Base.SenderPublicKey.ToByteArray());
 
             //todo: get an address from the key using the Account class from Common lib
             var account = Accounts.Get(pubKey.Bytes.AsBase32Address());

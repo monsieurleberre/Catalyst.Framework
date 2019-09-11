@@ -155,7 +155,7 @@ namespace Catalyst.Simulator.RpcClients
             {
                 HostAddress = _recipientPeerIdentifier.Ip,
                 Port = _recipientPeerIdentifier.Port,
-                PublicKey = _recipientPeerIdentifier.PublicKey.KeyToString()
+                PublicKey = _recipientPeerIdentifier.PeerId.PublicKey.KeyToString()
             };
 
             _logger.Information($"Connecting to {_recipientPeerIdentifier.Ip}:{_recipientPeerIdentifier.Port}");

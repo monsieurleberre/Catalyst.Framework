@@ -22,6 +22,7 @@
 #endregion
 
 using System.Text;
+using Catalyst.Protocol.Peer;
 using Google.Protobuf.Collections;
 
 namespace Catalyst.Core.Util
@@ -41,9 +42,9 @@ namespace Catalyst.Core.Util
             var stringBuilder = new StringBuilder();
             foreach (var peerInfo in repeatedPeerInfo)
             {
-                stringBuilder.AppendLine($"BlackListed={peerInfo.BlackListed}");
+                stringBuilder.AppendLine($"BlackListed={peerInfo.IsBlacklisted}");
                 stringBuilder.AppendLine($"Reputation={peerInfo.Reputation}");
-                stringBuilder.AppendLine($"IsAwolPeer={peerInfo.IsAwolPeer}");
+                stringBuilder.AppendLine($"IsAwolPeer={peerInfo.IsUnreachable}");
                 stringBuilder.AppendLine($"InactiveFor={peerInfo.InactiveFor.ToTimeSpan().ToString("c")}");
                 stringBuilder.AppendLine($"LastSeen={peerInfo.LastSeen.ToDateTime().ToString("MM/dd/yyyy HH:mm:ss")}");
 

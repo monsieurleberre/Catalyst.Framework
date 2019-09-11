@@ -21,12 +21,10 @@
 
 #endregion
 
-using Catalyst.Protocol.Peer;
-
-namespace Catalyst.Abstractions.P2P
+namespace Catalyst.Protocol.Cryptography
 {
-    public interface IPeerChallengeResponse
+    public partial class SigningContext
     {
-        PeerId PeerId { get; }
+        public static readonly SigningContext None = new SigningContext();
     }
 }

@@ -23,6 +23,7 @@
 
 using System;
 using Catalyst.Common.Extensions;
+using Catalyst.Protocol.Cryptography;
 using Google.Protobuf;
 using Multiformats.Hash;
 

@@ -50,7 +50,7 @@ namespace Catalyst.Core.P2P.IO.Observers
             var deserialised = messageDto.Payload.FromProtocolMessage<TransactionBroadcast>();
             _transactionReceivedEvent.OnTransactionReceived(deserialised);
 
-            Logger.Debug("transaction signature is {0}", deserialised.Signature);
+            Logger.Debug("transaction is {0}", deserialised);
         }
     }
 }

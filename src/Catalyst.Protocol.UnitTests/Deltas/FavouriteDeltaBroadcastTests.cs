@@ -23,7 +23,6 @@
 
 using System;
 using System.IO;
-using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using FluentAssertions;
@@ -81,13 +80,6 @@ namespace Catalyst.Protocol.UnitTests.Deltas
             }
         }
 
-        [Theory]
-        [ClassData(typeof(InvalidFavouriteDeltaBroadcasts))]
-        public void FavouriteDeltaBroadcast_IsValid_Should_Throw_On_Invalid_FavouriteDeltaBroadcast(FavouriteDeltaBroadcast favourite)
-        {
-            new Action(() => favourite.IsValid()).Should().Throw<InvalidDataException>();
-        }
-
         [Fact]
         public void FavouriteDeltaBroadcast_IsValid_Should_Not_Throw_On_Valid_FavouriteDeltaBroadcast()
         {
@@ -101,7 +93,7 @@ namespace Catalyst.Protocol.UnitTests.Deltas
                 },
                 VoterId = new PeerId()
             };
-            candidate.IsValid().Should().BeTrue();
+            candidate.IsValid.Should().BeTrue();
         }
     }
 }

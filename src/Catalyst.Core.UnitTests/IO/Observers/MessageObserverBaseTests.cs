@@ -32,6 +32,7 @@ using Catalyst.Core.Util;
 using Catalyst.Protocol;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Microsoft.Reactive.Testing;

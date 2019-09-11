@@ -23,6 +23,7 @@
 
 using Catalyst.Abstractions.Mempool.Documents;
 using Catalyst.Core.Mempool.Models;
+using Google.Protobuf;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using SharpRepository.Repository;
@@ -34,6 +35,6 @@ namespace Catalyst.Core.Mempool.Documents
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
         [BsonId]
-        public string DocumentId => Transaction?.Signature?.ToBase64();
+        public string DocumentId => Transaction?.ToByteString()?.ToBase64();
     }
 }

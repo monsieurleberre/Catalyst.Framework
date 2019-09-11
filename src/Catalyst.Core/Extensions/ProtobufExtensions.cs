@@ -29,6 +29,7 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.Network;
 using Catalyst.Protocol;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
@@ -41,7 +42,8 @@ namespace Catalyst.Core.Extensions
     {
         public static ProtocolMessage ToProtocolMessage(this IMessage protobufObject,
             PeerId senderId,
-            ICorrelationId correlationId = default)
+            ICorrelationId correlationId = default,
+            Signature signature = default)
         {
             var typeUrl = protobufObject.Descriptor.ShortenedFullName();
             Guard.Argument(senderId, nameof(senderId)).NotNull();
@@ -55,9 +57,9 @@ namespace Catalyst.Core.Extensions
             {
                 PeerId = senderId,
                 CorrelationId = (correlationId?.Id ?? CorrelationId.GenerateCorrelationId().Id).ToByteString(),
-
                 TypeUrl = typeUrl,
-                Value = protobufObject.ToByteString()
+                Value = protobufObject.ToByteString(),
+                Signature = signature
             };
         }
 

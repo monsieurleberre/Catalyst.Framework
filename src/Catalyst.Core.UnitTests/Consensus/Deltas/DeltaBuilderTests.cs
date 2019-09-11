@@ -37,6 +37,7 @@ using Catalyst.Core.Cryptography;
 using Catalyst.Core.Extensions;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Extensions;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
@@ -55,7 +56,7 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
         private readonly IDeterministicRandomFactory _randomFactory;
         private readonly IMultihashAlgorithm _hashAlgorithm;
         private readonly Random _random;
-        private readonly IPeerIdentifier _producerId;
+        private readonly PeerId _producerId;
         private readonly byte[] _previousDeltaHash;
         private readonly CoinbaseEntry _zeroCoinbaseEntry;
         private readonly IDeltaCache _cache;
@@ -73,10 +74,10 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
             _randomFactory.GetDeterministicRandomFromSeed(Arg.Any<byte[]>())
                .Returns(ci => new IsaacRandom(((byte[]) ci[0]).ToHex()));
 
-            _producerId = PeerIdentifierHelper.GetPeerIdentifier("producer");
+            _producerId = PeerIdHelper.GetPeerId("producer");
 
             _previousDeltaHash = Encoding.UTF8.GetBytes("previousDelta");
-            _zeroCoinbaseEntry = new CoinbaseEntry {Amount = 0, PubKey = _producerId.PublicKey.ToByteString(), Version = 1};
+            _zeroCoinbaseEntry = new CoinbaseEntry {Amount = 0, ReceiverPublicKey = _producerId.PublicKey};
 
             _logger = Substitute.For<ILogger>();
 
@@ -108,11 +109,8 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
             var invalidTransactionList = Enumerable.Range(0, 20).Select(i =>
             {
                 var transaction = TransactionHelper.GetTransaction(
-                    transactionType: TransactionType.Normal,
                     transactionFees: 954,
-                    timeStamp: 157,
-                    signature: i.ToString(),
-                    lockTime: (ulong) random.Next() + 475);
+                    timeStamp: 157);
                 return transaction;
             }).ToList();
 
@@ -135,24 +133,20 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
                 var transaction = TransactionHelper.GetTransaction(
                     standardAmount: (uint) i,
                     standardPubKey: i.ToString(),
-                    transactionType: TransactionType.Normal,
                     transactionFees: (ulong) _random.Next(),
-                    timeStamp: _random.Next(),
-                    signature: i.ToString(),
-                    lockTime: 0);
+                    timeStamp: _random.Next());
                 return transaction;
             }).ToList();
 
             var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
             transactionRetriever.GetMempoolTransactionsByPriority().Returns(transactions);
 
-            var selectedTransactions = transactions.Where(t => t.TransactionType == TransactionType.Normal).ToArray();
+            var selectedTransactions = transactions.Where(t => t.IsPublicTransaction).ToArray();
 
             var expectedCoinBase = new CoinbaseEntry
             {
-                Amount = selectedTransactions.Sum(t => t.TransactionFees),
-                Version = 1,
-                PubKey = _producerId.PublicKey.ToByteString()
+                Amount = selectedTransactions.Sum(t => t.SummedEntryFees),
+                ReceiverPublicKey = _producerId.PublicKey
             };
 
             var salt = BitConverter.GetBytes(
@@ -171,7 +165,7 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
                .ToArray();
 
             var signaturesInOrder = selectedTransactions
-               .Select(p => p.Signature.ToByteArray())
+               .Select(p => p.ToByteArray())
                .OrderBy(s => s, ByteUtil.ByteListComparer.Default)
                .SelectMany(b => b)
                .ToArray();
@@ -190,7 +184,7 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
         private void ValidateDeltaCandidate(CandidateDeltaBroadcast candidate, byte[] expectedBytesToHash)
         {
             candidate.Should().NotBeNull();
-            candidate.ProducerId.Should().Be(_producerId.PeerId);
+            candidate.ProducerId.Should().Be(_producerId);
             candidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(_previousDeltaHash).Should().BeTrue();
 
             var expectedHash = expectedBytesToHash.ComputeMultihash(_hashAlgorithm);

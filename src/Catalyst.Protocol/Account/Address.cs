@@ -30,67 +30,49 @@
 //using Dawn;
 //using Multiformats.Hash.Algorithms;
 
-//namespace Catalyst.Protocol.Common
-//{
-//    //https://github.com/catalyst-network/protobuffs-protocol-sdk-csharp/issues/41
-//    //move that to the Utils project after Dennis' project gets created.
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Catalyst.Common.Extensions;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Extensions;
+using Catalyst.Protocol.Network;
+using Dawn;
+using Multiformats.Hash;
+using Multiformats.Hash.Algorithms;
+using Org.BouncyCastle.Crypto.Agreement.Kdf;
 
-//    /// <inheritdoc />
-//    public class Address : IAddress
-//    {
-//        public static readonly int ByteLength = 20;
+namespace Catalyst.Protocol.Account  
+{
+    /// <inheritdoc />
+    public partial class Address
+    {
+        public static readonly int ByteLength = 20;
+        public static readonly BLAKE2B_152 Blake2B152 = new BLAKE2B_152();
 
-//        private readonly byte[] _nonPrefixedContent;
-//        private byte[] _rawBytes;
+        private byte[] _rawBytes;
 
-//        public Address(IPublicKey publicKey,
-//            Network network, 
-//            IMultihashAlgorithm hashingAlgorithm, 
-//            bool isSmartContract)
-//        {
-//            Guard.Argument(publicKey, nameof(publicKey)).NotNull();
-//            Network = network;
-//            IsSmartContract = isSmartContract;
+        public Address(IPublicKey publicKey,
+            NetworkType network,
+            AccountType accountType)
+        {
+            NetworkType = network;
+            AccountType = accountType;
+            PublicKeyHash = publicKey.Bytes
+               .ComputeRawHash(Blake2B152)
+               .ToByteString();
+        }
 
-//            _nonPrefixedContent = publicKey.Bytes
-//               .ComputeRawHash(hashingAlgorithm)
-//               .TakeLast(ByteLength - 2)
-//               .ToArray();
-//        }
+        public bool IsSmartContract => AccountType == AccountType.SmartContractAccount;
+        public bool IsPublicAccount => AccountType == AccountType.PublicAccount;
+        public bool IsConfidentialAccount => AccountType == AccountType.ConfidentialAccount;
 
-//        public Address(IList<byte> rawBytes)
-//        {
-//            Guard.Argument(rawBytes, nameof(rawBytes)).NotNull()
-//               .Require(b => b.Count == ByteLength,
-//                    b => $"{nameof(rawBytes)} is {rawBytes.Count} long but should be {ByteLength} instead.")
-//               .Require(b => Enum.IsDefined(typeof(Network), (int) b[0]),
-//                    b => $"Invalid byte at position 0, byte does not map to a known Network.")
-//               .Require(b => b[1] == 0 || b[1] == 1,
-//                    b => $"Invalid byte at position 1, byte should be either 0 or 1 but was {b[1]}.");
+        public byte[] RawBytes =>
+            _rawBytes ?? (_rawBytes = new[] {(byte) ((byte) NetworkType | (byte) AccountType)}
+               .Concat(PublicKeyHash.ToByteArray())
+               .ToArray());
 
-//            Network = (Network) rawBytes[0];
-
-//            IsSmartContract = rawBytes[1] == 1;
-//            _nonPrefixedContent = rawBytes.TakeLast(ByteLength - 2).ToArray();
-//        }
-
-//        /// <inheritdoc />
-//        public Network Network { get; }
-
-//        /// <inheritdoc />
-//        public bool IsSmartContract { get; }
-
-//        /// <inheritdoc />
-//        public byte[] RawBytes =>
-//            _rawBytes ?? (_rawBytes = new[]
-//                {
-//                    (byte) Network,
-//                    (byte) (IsSmartContract ? 1 : 0),
-//                }
-//               .Concat(_nonPrefixedContent)
-//               .ToArray());
-
-//        /// <inheritdoc />
-//        public string AsBase32Crockford => RawBytes.Take(20).AsBase32Address();
-//    }
-//}
+        public string AsBase32Crockford => RawBytes.AsBase32Address();
+    }
+}

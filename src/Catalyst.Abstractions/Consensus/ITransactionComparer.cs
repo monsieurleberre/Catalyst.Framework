@@ -22,6 +22,7 @@
 #endregion
 
 using System.Collections.Generic;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Abstractions.Consensus
 {

@@ -31,12 +31,17 @@ using Catalyst.Common.Utils;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Core.Keystore;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Extensions;
+using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
+using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
@@ -63,20 +68,19 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Broadcast
             var fakeSignature = Substitute.For<ISignature>();
             fakeSignature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.SignatureLength));
 
+            _signingContextProvider = new SigningContextProvider(NetworkType.Devnet, SignatureType.ProtocolPeer);
+
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
             _broadcastMessageSigned =
                 new ProtocolMessage
                 {
-                    Message = new ProtocolMessage
+                    Value = new ProtocolMessage
                     {
-                        Message = new TransactionBroadcast().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
-                        Signature = fakeSignature.SignatureBytes.ToByteString()
-                    }.ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
-                    Signature = fakeSignature.SignatureBytes.ToByteString()
+                        Value = new TransactionBroadcast().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()).ToByteString(),
+                        Signature = fakeSignature.SignatureBytes.AsProtoSignature(_signingContextProvider.SigningContext)
+                    }.ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()).ToByteString(),
+                    Signature = fakeSignature.SignatureBytes.AsProtoSignature(_signingContextProvider.SigningContext)
                 };
-            _signingContextProvider = Substitute.For<ISigningContextProvider>();
-            _signingContextProvider.Network.Returns(NetworkType.Devnet);
-            _signingContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
         }
 
         [Fact]

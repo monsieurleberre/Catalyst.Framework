@@ -34,6 +34,7 @@ using Catalyst.Common.Utils;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Core.Keystore;
 using Catalyst.Core.P2P.IO.Transport.Channels;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
@@ -84,6 +85,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Transport.Channels
         private readonly PeerId _senderId;
         private readonly ICorrelationId _correlationId;
         private readonly byte[] _signature;
+        private readonly SigningContext _signingContext;
 
         public PeerServerChannelFactoryTests()
         {
@@ -92,9 +94,8 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Transport.Channels
             _gossipManager = Substitute.For<IBroadcastManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
-            var signatureContext = Substitute.For<ISigningContextProvider>();
-            signatureContext.Network.Returns(NetworkType.Devnet);
-            signatureContext.SignatureType.Returns(SignatureType.ProtocolPeer);
+            var signingContextProvider = 
+                new SigningContextProvider(NetworkType.Devnet, SignatureType.ProtocolPeer);
 
             var peerValidator = Substitute.For<IPeerIdValidator>();
             peerValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
@@ -104,13 +105,18 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Transport.Channels
                 _gossipManager,
                 _keySigner,
                 peerValidator,
-                signatureContext,
+                signingContextProvider,
                 _testScheduler);
             _senderId = PeerIdHelper.GetPeerId("sender");
             _correlationId = CorrelationId.GenerateCorrelationId();
             _signature = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
                .ReturnsForAnyArgs(true);
+            _signingContext = new SigningContext
+            {
+                NetworkType = NetworkType.Devnet,
+                SignatureType = SignatureType.ProtocolPeer
+            };
         }
 
         [Fact]
@@ -138,7 +144,11 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Transport.Channels
             var signedMessage = new ProtocolMessage
             {
                 Value = protocolMessage.ToByteString(),
-                Signature = new Signature() _signature.ToByteString()
+                Signature = new Signature
+                {
+                    RawBytes = _signature.ToByteString(),
+                    SigningContext = _signingContext
+                }
             };
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
@@ -182,14 +192,10 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Transport.Channels
 
         private ProtocolMessage GetSignedMessage()
         {
-            var protocolMessage = new PeerNeighborsRequest()
-               .ToProtocolMessage(_senderId, CorrelationId.GenerateCorrelationId());
+            var signedMessage = new PeerNeighborsRequest()
+               .ToProtocolMessage(_senderId, CorrelationId.GenerateCorrelationId())
+               .ToProtocolMessage(_senderId, signature: _signature.AsProtoSignature(_signingContext));
 
-            var signedMessage = new ProtocolMessage
-            {
-                Message = protocolMessage,
-                Signature = _signature.ToByteString()
-            };
             return signedMessage;
         }
 

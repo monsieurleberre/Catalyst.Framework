@@ -29,7 +29,15 @@ namespace Catalyst.Core.Keystore
 {
     public class SigningContextProvider : ISigningContextProvider
     {
-        public NetworkType Network { get; set; }
-        public SignatureType SignatureType { get; set; }
+        public SigningContextProvider(NetworkType networkType, SignatureType signatureType)
+        {
+            Network = networkType;
+            SignatureType = signatureType;
+            SigningContext = new SigningContext {NetworkType = Network, SignatureType = SignatureType};
+        }
+
+        public NetworkType Network { get; }
+        public SignatureType SignatureType { get; }
+        public SigningContext SigningContext { get; }
     }
 }

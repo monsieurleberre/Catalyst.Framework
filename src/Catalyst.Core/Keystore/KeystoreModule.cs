@@ -26,6 +26,8 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Util;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 using Serilog;
 
 namespace Catalyst.Core.Keystore
@@ -34,10 +36,8 @@ namespace Catalyst.Core.Keystore
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new SigningContextProvider())
-                .OnActivated(e => e.Instance.Network = NetworkType.Mainnet)
-                .OnActivated(e => e.Instance.SignatureType = Protocol.Common.SignatureType.ProtocolPeer)
-                .As<ISigningContextProvider>();
+            builder.Register(c => new SigningContextProvider(NetworkType.Mainnet, SignatureType.ProtocolPeer))
+               .As<ISigningContextProvider>();
 
             builder.Register(c => new LocalKeyStore(
                 c.Resolve<IPasswordManager>(),

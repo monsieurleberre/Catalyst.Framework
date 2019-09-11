@@ -27,6 +27,7 @@ using System.Linq;
 using System.Net;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Network;
+using Catalyst.Protocol.Network;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 

@@ -68,10 +68,14 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Transport.Channels
             _serverCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _serverKeySigner = Substitute.For<IKeySigner>();
 
-            var signatureContextProvider = Substitute.For<ISigningContextProvider>();
-            signatureContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
+            var signingContext = new SigningContext
+            {
+                NetworkType = NetworkType.Devnet,
+                SignatureType = SignatureType.ProtocolPeer
+            };
+            var signingContextProvider = Substitute.For<ISigningContextProvider>();
+            signingContextProvider.SigningContext.Returns(signingContext);
 
-            signatureContextProvider.Network.Returns(NetworkType.Devnet);
             _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
 
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
@@ -81,7 +85,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Transport.Channels
                 _serverKeySigner,
                 _authenticationStrategy,
                 _peerIdValidator,
-                signatureContextProvider,
+                signingContextProvider,
                 _testScheduler);
 
             _clientCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
@@ -91,7 +95,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Transport.Channels
                 _clientKeySigner, 
                 _clientCorrelationManager,
                 _peerIdValidator,
-                signatureContextProvider,
+                signingContextProvider,
                 _testScheduler);
 
             _serverChannel =

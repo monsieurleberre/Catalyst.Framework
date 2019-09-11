@@ -30,6 +30,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Utils;
 using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
@@ -78,7 +79,7 @@ namespace Catalyst.Core.Consensus.Deltas
             _logger.Verbose("Favourite candidate delta received {favourite}", candidate);
             try
             {
-                Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid());
+                Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid);
                 if (!_deltaProducersProvider
                    .GetDeltaProducersFromPreviousDelta(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray())
                    .Any(p => p.PeerId.Equals(candidate.VoterId)))

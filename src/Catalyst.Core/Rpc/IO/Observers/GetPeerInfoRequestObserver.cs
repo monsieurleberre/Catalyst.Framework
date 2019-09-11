@@ -27,6 +27,8 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.IO.Observers;
 using Catalyst.Core.P2P.Repository;
+using Catalyst.Protocol.Extensions;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -79,8 +81,8 @@ namespace Catalyst.Core.Rpc.IO.Observers
                     {
                         PeerId = x.PeerIdentifier.PeerId,
                         Reputation = x.Reputation,
-                        BlackListed = x.BlackListed,
-                        IsAwolPeer = x.IsAwolPeer,
+                        IsBlacklisted = x.BlackListed,
+                        IsUnreachable = x.IsAwolPeer,
                         InactiveFor = x.InactiveFor.ToDuration(),
                         LastSeen = x.LastSeen.ToTimestamp(),
                         Modified = x.Modified.HasValue ? x.Modified.Value.ToTimestamp() : null,

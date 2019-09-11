@@ -25,11 +25,16 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Common.Utils;
 using Catalyst.Core.IO.Handlers;
+using Catalyst.Core.Keystore;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Extensions;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 using NSubstitute;
 using Xunit;
 
@@ -38,7 +43,7 @@ namespace Catalyst.Core.UnitTests.IO.Handlers
     public sealed class ProtocolMessageVerifyHandlerTests
     {
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly ProtocolMessage _ProtocolMessage;
+        private readonly ProtocolMessage _protocolMessage;
         private readonly IKeySigner _keySigner;
         private readonly ISigningContextProvider _signingContextProvider;
 
@@ -46,22 +51,20 @@ namespace Catalyst.Core.UnitTests.IO.Handlers
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _keySigner = Substitute.For<IKeySigner>();
-            _signingContextProvider = Substitute.For<ISigningContextProvider>();
+            _signingContextProvider = new SigningContextProvider(NetworkType.Devnet, SignatureType.ProtocolPeer);
 
             var signatureBytes = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
             var publicKeyBytes = ByteUtil.GenerateRandomByteArray(FFI.PublicKeyLength);
 
-            _ProtocolMessage = new ProtocolMessage
+
+            _protocolMessage = new ProtocolMessage
             {
-                Signature = signatureBytes.ToByteString(),
-                Message = new ProtocolMessage
+                Signature = signatureBytes.AsProtoSignature(_signingContextProvider.SigningContext),
+                Value = new ProtocolMessage
                 {
                     PeerId = PeerIdentifierHelper.GetPeerIdentifier(publicKeyBytes.ToString()).PeerId
-                }
+                }.ToByteString()
             };
-
-            _signingContextProvider.Network.Returns(NetworkType.Devnet);
-            _signingContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
         }
 
         [Fact]
@@ -72,9 +75,9 @@ namespace Catalyst.Core.UnitTests.IO.Handlers
 
             var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider);
 
-            signatureHandler.ChannelRead(_fakeContext, _ProtocolMessage);
+            signatureHandler.ChannelRead(_fakeContext, _protocolMessage);
 
-            _fakeContext.ReceivedWithAnyArgs().FireChannelRead(_ProtocolMessage).Received(1);
+            _fakeContext.ReceivedWithAnyArgs().FireChannelRead(_protocolMessage).Received(1);
         }
         
         [Fact]
@@ -85,9 +88,9 @@ namespace Catalyst.Core.UnitTests.IO.Handlers
 
             var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider);
 
-            signatureHandler.ChannelRead(_fakeContext, _ProtocolMessage);
+            signatureHandler.ChannelRead(_fakeContext, _protocolMessage);
             
-            _fakeContext.DidNotReceiveWithAnyArgs().FireChannelRead(_ProtocolMessage).Received(0);
+            _fakeContext.DidNotReceiveWithAnyArgs().FireChannelRead(_protocolMessage).Received(0);
         }
     }
 }

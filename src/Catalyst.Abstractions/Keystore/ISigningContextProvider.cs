@@ -27,8 +27,6 @@ namespace Catalyst.Abstractions.Keystore
 {
     public interface ISigningContextProvider
     {
-        Protocol.Network.NetworkType Network { get; set; }
-
-        SignatureType SignatureType { get; set; }
+        SigningContext SigningContext { get; }
     }
 }

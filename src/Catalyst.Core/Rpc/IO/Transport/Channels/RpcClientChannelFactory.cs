@@ -39,6 +39,7 @@ using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Codecs;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Transport.Channels;
+using Catalyst.Protocol.Wire;
 using DotNetty.Buffers;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
@@ -53,13 +54,6 @@ namespace Catalyst.Core.Rpc.IO.Transport.Channels
         private readonly IObservableServiceHandler _observableServiceHandler;
         private readonly ISigningContextProvider _signingContextProvider;
 
-        /// <summary>
-        /// </summary>
-        /// <param name="keySigner"></param>
-        /// <param name="messageCorrelationCache"></param>
-        /// <param name="peerIdValidator"></param>
-        /// <param name="backLogValue"></param>
-        /// <param name="scheduler"></param>
         public RpcClientChannelFactory(IKeySigner keySigner,
             IRpcMessageCorrelationManager messageCorrelationCache,
             IPeerIdValidator peerIdValidator,

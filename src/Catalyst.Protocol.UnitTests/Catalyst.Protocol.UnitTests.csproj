@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <SignAssembly>true</SignAssembly>
@@ -6,6 +6,7 @@
   </PropertyGroup>
   <Import Project="../Common.UnitTests.props" />
   <ItemGroup>
+    <ProjectReference Include="..\Catalyst.Core\Catalyst.Core.csproj" />
     <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
   </ItemGroup>
   <ItemGroup>

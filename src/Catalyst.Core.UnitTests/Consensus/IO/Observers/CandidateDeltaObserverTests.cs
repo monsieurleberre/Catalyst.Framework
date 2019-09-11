@@ -31,6 +31,8 @@ using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Extensions;
+using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Multiformats.Hash.Algorithms;

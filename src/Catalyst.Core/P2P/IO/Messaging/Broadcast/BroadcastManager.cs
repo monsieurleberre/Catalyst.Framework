@@ -106,7 +106,7 @@ namespace Catalyst.Core.P2P.IO.Messaging.Broadcast
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(10)).Token));
         }
 
-        private async Task BroadcastAsync(ProtocolMessage signedMessage)
+        private async Task BroadcastSignedMessageAsync(ProtocolMessage signedMessage)
         {
             var protocolMessage = signedMessage.FromProtocolMessage<ProtocolMessage>();
 
@@ -137,7 +137,7 @@ namespace Catalyst.Core.P2P.IO.Messaging.Broadcast
             {
                 var originalSignedMessage =
                     _incomingBroadcastSignatureDictionary[correlationId];
-                await BroadcastAsync(originalSignedMessage).ConfigureAwait(false);
+                await BroadcastSignedMessageAsync(originalSignedMessage).ConfigureAwait(false);
             }
             else
             {
@@ -152,10 +152,10 @@ namespace Catalyst.Core.P2P.IO.Messaging.Broadcast
                 var signature = _signer.Sign(message.ToByteArray(), signingContext);
                 var ProtocolMessage = new ProtocolMessage
                 {
-                    Signature = signature.SignatureBytes.ToByteString(),
-                    Value = message
+                    Signature = signature.SignatureBytes.AsProtoSignature(signingContext),
+                    Value = message.ToByteString()
                 };
-                await BroadcastAsync(ProtocolMessage).ConfigureAwait(false);
+                await BroadcastSignedMessageAsync(ProtocolMessage).ConfigureAwait(false);
             }
         }
 

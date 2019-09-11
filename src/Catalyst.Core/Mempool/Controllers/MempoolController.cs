@@ -48,20 +48,20 @@ namespace Catalyst.Core.Mempool.Controllers
         public IActionResult GetBalance(string publicKey)
         {
             return Ok(_mempoolRepository.GetAll().Where(t =>
-                    t.STEntries != null
-                 && t.STEntries.Count > 0
-                 && t.STEntries.Any(stEntries => stEntries.PubKey.ToByteArray()
+                    t.PublicEntries != null
+                 && t.PublicEntries.Count > 0
+                 && t.PublicEntries.Any(e => e.Base.SenderPublicKey.ToByteArray()
                        .SequenceEqual(ByteString.FromBase64(publicKey).ToByteArray())))
-               .Sum(t => t.STEntries.Sum(entries => entries.Amount)));
+               .Sum(t => t.PublicEntries.Sum(entries => entries.Amount)));
         }
 
         [HttpGet]
         public JsonResult GetMempoolTransaction(string publicKey)
         {
             var result = _mempoolRepository.GetAll().Where(t =>
-                t.STEntries != null
-             && t.STEntries.Count > 0
-             && t.STEntries.Any(stEntries => stEntries.PubKey.ToByteArray()
+                t.PublicEntries != null
+             && t.PublicEntries.Count > 0
+             && t.PublicEntries.Any(e => e.Base.SenderPublicKey.ToByteArray()
                    .SequenceEqual(ByteString.FromBase64(publicKey).ToByteArray())));
 
             return Json(result, new JsonSerializerSettings

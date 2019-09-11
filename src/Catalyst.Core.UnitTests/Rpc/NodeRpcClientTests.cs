@@ -41,6 +41,7 @@ using Catalyst.Core.Rpc;
 using Catalyst.Core.Rpc.IO.Exceptions;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;

@@ -28,6 +28,7 @@ using Catalyst.Abstractions.Mempool.Documents;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Mempool.Documents;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Serilog;

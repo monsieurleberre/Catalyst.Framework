@@ -41,6 +41,7 @@ using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.Rpc;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;

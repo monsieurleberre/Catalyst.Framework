@@ -66,7 +66,7 @@ namespace Catalyst.Core.P2P
         public PeerIdentifier(PeerId peerId)
         {
             var keyLength = FFI.PublicKeyLength;
-            Guard.Argument(peerId.PublicKey.RawBytes, nameof(peerId.PublicKey)).MinCount(keyLength).MaxCount(keyLength);
+            Guard.Argument(peerId.PublicKey, nameof(peerId.PublicKey)).MinCount(keyLength).MaxCount(keyLength);
             PeerId = peerId;
         }
 
@@ -120,7 +120,7 @@ namespace Catalyst.Core.P2P
                 ProtocolVersion = peerByteChunks[1],
                 Ip = IPAddress.Parse(rawPidChunks[2]).MapToIPv4().To16Bytes().ToByteString(),
                 Port = BitConverter.ToUInt32(peerByteChunks[3].ToByteArray()),
-                PublicKey = new PublicKey() {RawBytes = peerByteChunks[4]}
+                PublicKey = peerByteChunks[4]
             });
         }
 
@@ -139,7 +139,7 @@ namespace Catalyst.Core.P2P
         {
             PeerId = new PeerId
             {
-                PublicKey = new PublicKey {RawBytes = publicKey.ToByteString()},
+                PublicKey = publicKey.ToByteString(),
                 Port = (uint) endPoint.Port,
                 Ip = endPoint.Address.To16Bytes().ToByteString()
             };

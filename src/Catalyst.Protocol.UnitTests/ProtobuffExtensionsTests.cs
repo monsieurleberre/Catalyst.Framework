@@ -21,11 +21,14 @@
 
 #endregion
 
+using Catalyst.Core.Extensions;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
 using Google.Protobuf;
 using Xunit;
+using TransactionBroadcast = Catalyst.Protocol.Wire.TransactionBroadcast;
 
 namespace Catalyst.Protocol.UnitTests
 {
@@ -34,22 +37,11 @@ namespace Catalyst.Protocol.UnitTests
         [Fact]
         public void Can_Identify_Broadcast_Message()
         {
-            var ProtocolMessage = new ProtocolMessage
-            {
-                Message = new ProtocolMessage
-                {
-                    Value = new TransactionBroadcast().ToByteString(),
-                    TypeUrl = TransactionBroadcast.Descriptor.ShortenedFullName()
-                }
-            };
+            var wrappedProtocolMessage = new TransactionBroadcast()
+               .ToProtocolMessage(new PeerId())
+               .ToProtocolMessage(new PeerId());
 
-            var protocolMessage = new ProtocolMessage
-            {
-                Value = ProtocolMessage.ToByteString(),
-                TypeUrl = ProtocolMessage.Descriptor.ShortenedFullName()
-            };
-
-            protocolMessage.IsBroadCastMessage().Should().BeTrue();
+            wrappedProtocolMessage.IsBroadCastMessage().Should().BeTrue();
         }
 
         [Fact]

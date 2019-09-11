@@ -21,6 +21,7 @@
 
 #endregion
 
+using Google.Protobuf;
 using SimpleBase;
 
 namespace Catalyst.Core.Util
@@ -28,6 +29,11 @@ namespace Catalyst.Core.Util
     // https://github.com/catalyst-network/Catalyst.Node/issues/847
     public static class KeyUtil
     {
+        public static string KeyToString(this ByteString keyAsByteString)
+        {
+            return Base32.Crockford.Encode(keyAsByteString.ToByteArray(), false).ToLowerInvariant();
+        }
+
         public static string KeyToString(this byte[] keyAsBytes)
         {
             return Base32.Crockford.Encode(keyAsBytes, false).ToLowerInvariant();

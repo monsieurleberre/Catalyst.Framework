@@ -49,7 +49,7 @@ namespace Catalyst.Core.Rpc.Authentication
         public bool Authenticate(IPeerIdentifier peerIdentifier)
         {
             return _trustedPeers.TryFind(t => t.IpAddress.Equals(peerIdentifier.Ip.ToString()) &&
-                t.PublicKey.KeyToBytes().SequenceEqual(peerIdentifier.PublicKey), out _);
+                t.PublicKey.KeyToBytes().SequenceEqual(peerIdentifier.PeerId.PublicKey), out _);
         }
     }
 }

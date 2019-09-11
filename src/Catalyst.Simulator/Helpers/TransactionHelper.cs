@@ -22,8 +22,10 @@
 #endregion
 
 using System;
+using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
@@ -37,21 +39,20 @@ namespace Catalyst.Simulator.Helpers
             var broadcastRawTransactionRequest = new BroadcastRawTransactionRequest();
             var transaction = new TransactionBroadcast
             {
-                TransactionFees = (ulong) fee,
-                TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
-                LockTime = 0,
-                TransactionType = TransactionType.Normal
+                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow),
+                PublicEntries =
+                {
+                    new PublicEntry
+                    {
+                        Base = new BaseEntry
+                        {
+                            SenderPublicKey = ByteString.FromBase64("VkC84TBQOVjrcX81NYV5swPVrE4RN+nKGzIjxNT2AY0="),
+                            TransactionFees = (ulong) fee
+                        },
+                        Amount = amount
+                    }
+                }
             };
-
-            var stTransactionEntry = new STTransactionEntry
-            {
-                PubKey = ByteString.FromBase64("VkC84TBQOVjrcX81NYV5swPVrE4RN+nKGzIjxNT2AY0="),
-                Amount = amount
-            };
-
-            transaction.STEntries.Add(stTransactionEntry);
-
-            transaction.Signature = ByteString.CopyFromUtf8(guid.ToString());
 
             broadcastRawTransactionRequest.Transaction = transaction;
 

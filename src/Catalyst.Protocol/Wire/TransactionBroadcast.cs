@@ -23,7 +23,7 @@
 
 using System.Linq;
 using System.Reflection;
-using Catalyst.Protocol.Cryptography;
+using Catalyst.Core.Extensions;
 using Serilog;
 
 namespace Catalyst.Protocol.Wire
@@ -46,6 +46,11 @@ namespace Catalyst.Protocol.Wire
         public bool IsPublicTransaction { get; private set; }
         public bool IsConfidentialTransaction { get; private set; }
 
+        public ulong SummedEntryFees =>
+            ContractEntries.Sum(e => e.Base.TransactionFees)
+          + PublicEntries.Sum(e => e.Base.TransactionFees)
+          + ConfidentialEntries.Sum(e => e.Base.TransactionFees);
+
         public bool HasValidEntries
         {
             get
@@ -54,15 +59,6 @@ namespace Catalyst.Protocol.Wire
                 if (hasSingleType) {return true;}
                 Logger.Debug("{instance} can only be of a single type", nameof(TransactionBroadcast));
                 return false;
-            }
-        }
-
-        public Signature Signature
-        {
-            get
-            {
-                if(IsContractDeployment) this.ConfidentialEntries[0].Base.Sender.
-                    return null;
             }
         }
     }

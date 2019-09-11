@@ -40,6 +40,7 @@ using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Codecs;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Transport.Channels;
+using Catalyst.Protocol.Wire;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 

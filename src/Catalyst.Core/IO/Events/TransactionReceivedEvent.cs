@@ -32,6 +32,7 @@ using Catalyst.Protocol.Interfaces.Validators;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
+using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Core.IO.Events
@@ -68,7 +69,7 @@ namespace Catalyst.Core.IO.Events
                 return ResponseCode.Error;
             }
 
-            var transactionSignature = transaction.Signature;
+            var transactionSignature = transaction.ToByteString();
             _logger.Verbose("Adding transaction {signature} to mempool", transactionSignature);
 
             // https://github.com/catalyst-network/Catalyst.Node/issues/910 - should we fail or succeed if we already have the transaction in the ledger?

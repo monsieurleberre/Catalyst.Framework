@@ -72,7 +72,7 @@ namespace Catalyst.Core.Consensus.Deltas
         /// <inheritdoc />
         public void BroadcastCandidate(CandidateDeltaBroadcast candidate)
         {
-            Guard.Argument(candidate, nameof(candidate)).NotNull().Require(c => c.IsValid());
+            Guard.Argument(candidate, nameof(candidate)).NotNull().Require(c => c.IsValid);
             _logger.Information("Broadcasting candidate delta {0}", candidate);
 
             if (!candidate.ProducerId.Equals(_peerIdentifier.PeerId))
@@ -91,7 +91,7 @@ namespace Catalyst.Core.Consensus.Deltas
         /// <inheritdoc />
         public void BroadcastFavouriteCandidateDelta(FavouriteDeltaBroadcast favourite)
         {
-            Guard.Argument(favourite, nameof(favourite)).NotNull().Require(c => c.IsValid());
+            Guard.Argument(favourite, nameof(favourite)).NotNull().Require(c => c.IsValid);
             var protocolMessage = favourite.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
             _broadcastManager.BroadcastAsync(protocolMessage);
 

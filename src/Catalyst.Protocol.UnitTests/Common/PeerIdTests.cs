@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using Catalyst.Protocol.Peer;
 using FluentAssertions;
 using Google.Protobuf;
 using Xunit;

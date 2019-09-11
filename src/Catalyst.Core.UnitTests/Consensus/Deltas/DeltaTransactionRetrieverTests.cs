@@ -29,8 +29,10 @@ using Catalyst.Core.Consensus;
 using Catalyst.Core.Consensus.Deltas;
 using Catalyst.Core.Mempool.Documents;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Google.Protobuf;
 using NSubstitute;
 using Xunit;
 
@@ -47,10 +49,8 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
 
             var mempool = Substitute.For<IMempool<MempoolDocument>>();
             _transactions = Enumerable.Range(0, 20).Select(i => TransactionHelper.GetTransaction(
-                transactionType: TransactionType.Normal,
                 transactionFees: (ulong) random.Next(),
-                timeStamp: random.Next(),
-                signature: i.ToString())
+                timeStamp: random.Next())
             ).ToList();
 
             mempool.Repository.GetAll().Returns(_transactions);
@@ -102,12 +102,12 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
                .Take(excludedTransactionCount).ToList();
 
             unexpectedTransactions
-               .ForEach(t => retrievedTransactions.Any(r => t.Signature == r.Signature).Should()
+               .ForEach(t => retrievedTransactions.Any(r => t.ToByteString() == r.ToByteString()).Should()
                    .BeFalse("No unexpected transactions should have been retrieved"));
 
             for (var i = 0; i < maxCount; i++)
             {
-                retrievedTransactions[i].TransactionType.Should().Be(expectedTransactions[i].TransactionType);
+                retrievedTransactions[i].ContractEntries.Count.Should().Be(expectedTransactions[i].ContractEntries.Count);
                 if (i == 0)
                 {
                     continue;
@@ -115,8 +115,8 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
 
                 // just a sanity check to make sure that the order is not opposite of what was intended in
                 // TransactionComparerByFeeTimestampAndHash
-                retrievedTransactions[i - 1].TransactionFees.Should()
-                   .BeGreaterOrEqualTo(retrievedTransactions[i].TransactionFees);
+                retrievedTransactions[i - 1].SummedEntryFees.Should()
+                   .BeGreaterOrEqualTo(retrievedTransactions[i].SummedEntryFees);
             }
         }
     }

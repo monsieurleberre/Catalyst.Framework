@@ -40,7 +40,7 @@ namespace Catalyst.Protocol.Transaction
             }
         }
 
-        public bool IsValidDeploymentEntry => IsValid && !Base.Recipient.RawBytes.IsEmpty;
-        public bool IsValidCallEntry => IsValid && Base.Recipient.RawBytes.IsEmpty;
+        public bool IsValidDeploymentEntry => IsValid && !Base.ReceiverPublicKey.IsEmpty;
+        public bool IsValidCallEntry => IsValid && Base.ReceiverPublicKey.IsEmpty;
     }
 }

@@ -32,6 +32,7 @@ using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -67,8 +68,8 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         {
             var txLst = new List<TransactionBroadcast>
             {
-                TransactionHelper.GetTransaction(234, "standardPubKey", "sign1"),
-                TransactionHelper.GetTransaction(567, "standardPubKey", "sign2")
+                TransactionHelper.GetTransaction(234, "standardPubKey"),
+                TransactionHelper.GetTransaction(567, "standardPubKey")
             };
 
             return txLst;

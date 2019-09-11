@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Protocol.Cryptography;
 using Google.Protobuf;
 
 namespace Catalyst.Protocol.Extensions
@@ -33,6 +34,12 @@ namespace Catalyst.Protocol.Extensions
         {
             var enumerable = bytes as byte[] ?? bytes.ToArray();
             return ByteString.CopyFrom(enumerable);
+        }
+
+        public static Signature AsProtoSignature(this IEnumerable<byte> bytes, SigningContext signingContext)
+        {
+            var array = bytes as byte[] ?? bytes.ToArray();
+            return new Signature {RawBytes = ByteString.CopyFrom(array), SigningContext = signingContext};
         }
     }
 }

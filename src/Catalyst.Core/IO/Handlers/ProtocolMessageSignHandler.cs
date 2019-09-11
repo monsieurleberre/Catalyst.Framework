@@ -46,19 +46,12 @@ namespace Catalyst.Core.IO.Handlers
         public ProtocolMessageSignHandler(IKeySigner keySigner, ISigningContextProvider signingContextProvider)
         {
             _keySigner = keySigner;
-            _signingContext = new SigningContext
-            {
-                NetworkType = signingContextProvider.Network,
-                SignatureType = signingContextProvider.SignatureType
-            };
+            _signingContext = signingContextProvider.SigningContext;
         }
 
         /// <summary>
         ///     Signs a protocol message, or straight WriteAndFlush non-protocolMessages
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
         protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
             Logger.Verbose("Signing message {message}", message);
@@ -67,7 +60,7 @@ namespace Catalyst.Core.IO.Handlers
             
             var ProtocolMessage = new ProtocolMessage
             {
-                Signature = sig.SignatureBytes.ToByteString(),
+                Signature = sig.SignatureBytes.AsProtoSignature(_signingContext),
                 Value = message.Content.ToByteString()
             };
 

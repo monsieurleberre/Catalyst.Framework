@@ -68,12 +68,7 @@ namespace Catalyst.Core.Mempool.Repositories
         }
         
         public bool CreateItem(TransactionBroadcast transactionBroadcast)
-        {      
-            if (transactionBroadcast.Signature.Equals(null) || transactionBroadcast.Signature.Equals(ByteString.Empty))
-            {
-                throw new ArgumentNullException(nameof(transactionBroadcast));
-            }
-            
+        {
             try
             {
                 Repository.Add(new MempoolDocument {Transaction = transactionBroadcast});

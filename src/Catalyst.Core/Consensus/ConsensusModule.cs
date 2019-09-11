@@ -35,6 +35,7 @@ using Catalyst.Core.Consensus.Cycle;
 using Catalyst.Core.Consensus.Deltas;
 using Catalyst.Core.Consensus.IO.Observers;
 using Catalyst.Core.Mempool.Documents;
+using Catalyst.Protocol.Peer;
 using Microsoft.Extensions.Caching.Memory;
 using Multiformats.Hash.Algorithms;
 using Serilog;
@@ -144,7 +145,7 @@ namespace Catalyst.Core.Consensus
                     c.Resolve<IDeltaTransactionRetriever>(),
                     c.Resolve<IDeterministicRandomFactory>(),
                     c.Resolve<IMultihashAlgorithm>(),
-                    c.Resolve<IPeerIdentifier>(),
+                    c.Resolve<PeerId>(),
                     c.Resolve<IDeltaCache>(),
                     c.Resolve<IDateTimeProvider>(),
                     c.Resolve<ILogger>()

@@ -27,6 +27,7 @@ using System.Net;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Network;
+using Catalyst.Protocol.Peer;
 using Dawn;
 
 namespace Catalyst.Core.P2P
@@ -50,7 +51,7 @@ namespace Catalyst.Core.P2P
             Guard.Argument(peerId, nameof(peerId)).NotNull()
                .Require(p => p.PublicKey.Length == publicKeyLength, p => $"PublicKey should be {publicKeyLength} bytes but was {p.PublicKey.Length}")
                .Require(p => p.Ip.Length == 16 && ValidateIp(p.Ip.ToByteArray()), _ => "Ip should be 16 bytes")
-               .Require(p => ValidatePort(p.Port.ToByteArray()), _ => "Port should be between 1025 and 65535")
+               .Require(p => ValidatePort(p.Port), _ => "Port should be between 1025 and 65535")
                .Require(p => ValidateProtocolVersion(p.ProtocolVersion.ToByteArray()));
 
             return true;
@@ -89,12 +90,9 @@ namespace Catalyst.Core.P2P
             return IPAddress.TryParse(new IPAddress(clientIp).ToString(), out _);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="portBytes"></param>
-        private bool ValidatePort(byte[] portBytes)
+        private bool ValidatePort(uint port)
         {
-            return Ip.ValidPortRange(BitConverter.ToUInt16(portBytes));
+            return Ip.ValidPortRange((int) port);
         }
     }
 }

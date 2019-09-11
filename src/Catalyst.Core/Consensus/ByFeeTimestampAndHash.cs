@@ -49,7 +49,7 @@ namespace Catalyst.Core.Consensus
                 return -1;
             }
 
-            var feeComparison = x.PublicEntries.Base.TransactionFees.CompareTo(y.TransactionFees);
+            var feeComparison = x.SummedEntryFees.CompareTo(y.SummedEntryFees);
             if (feeComparison != 0)
             {
                 return feeComparison;

@@ -28,6 +28,7 @@ using Catalyst.Core.Cryptography;
 using Catalyst.Core.P2P;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Protocol.Extensions;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
@@ -57,7 +58,7 @@ namespace Catalyst.Core.UnitTests.P2P
             _output.WriteLine(string.Join(" ", _validPeerId.ToByteArray()));
             var fieldsInBytes = new[]
             {
-                _validPeerId.Ip.ToByteArray(), _validPeerId.Port.ToByteArray(),
+                _validPeerId.Ip.ToByteArray(), BitConverter.GetBytes(_validPeerId.Port),
                 _validPeerId.PublicKey.ToByteArray()
             };
             _output.WriteLine(string.Join(" ", fieldsInBytes.SelectMany(b => b)));
@@ -129,7 +130,7 @@ namespace Catalyst.Core.UnitTests.P2P
         {
             var invalidPeer = new PeerId(_validPeerId)
             {
-                Port = BitConverter.GetBytes(port).ToByteString()
+                Port = (uint) port
             };
 
             new Action(() => _peerIdValidator.ValidatePeerIdFormat(invalidPeer))

@@ -22,7 +22,9 @@
 #endregion
 
 using Catalyst.Core.P2P;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using MongoDB.Bson.Serialization;
 
@@ -36,9 +38,9 @@ namespace Catalyst.Core.Util
             
             AddSerializer<TransactionBroadcast>();
             AddSerializer<PeerId>();
-            AddSerializer<STTransactionEntry>();
-            AddSerializer<CFTransactionEntry>();
-            AddSerializer<EntryRangeProof>();
+            AddSerializer<ConfidentialEntry>();
+            AddSerializer<PublicEntry>();
+            AddSerializer<RangeProof>();
         }
         
         static void AddSerializer<TType>() where TType : IMessage, new()
