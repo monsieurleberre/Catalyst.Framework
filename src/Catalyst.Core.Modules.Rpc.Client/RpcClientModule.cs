@@ -22,7 +22,9 @@
 #endregion
 
 using Autofac;
+using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Rpc;
+using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
 
 namespace Catalyst.Core.Modules.Rpc.Client
 {
@@ -33,6 +35,23 @@ namespace Catalyst.Core.Modules.Rpc.Client
             builder.RegisterType<RpcClient>().As<IRpcClient>();
             builder.RegisterType<RpcClientFactory>().As<IRpcClientFactory>();
             builder.RegisterType<RpcClientSettings>().As<IRpcClientConfig>();
+
+            builder.RegisterType<AddFileToDfsResponseObserver>().As<IRpcResponseObserver>();
+            builder.RegisterType<BroadcastRawTransactionResponseObserver>().As<IRpcResponseObserver>();
+            builder.RegisterType<ChangeDataFolderResponseObserver>().As<IRpcResponseObserver>();
+            builder.RegisterType<GetDeltaResponseObserver>().As<IRpcResponseObserver>();
+            builder.RegisterType<GetInfoResponseObserver>().As<IRpcResponseObserver>();
+            builder.RegisterType<GetMempoolResponseObserver>().As<IRpcResponseObserver>();
+            builder.RegisterType<GetPeerInfoResponseObserver>().As<IRpcResponseObserver>();
+            builder.RegisterType<GetVersionResponseObserver>().As<IRpcResponseObserver>();
+            builder.RegisterType<PeerBlackListingResponseObserver>().As<IRpcResponseObserver>();
+            builder.RegisterType<PeerCountResponseObserver>().As<IRpcResponseObserver>();
+            builder.RegisterType<PeerListResponseObserver>().As<IRpcResponseObserver>();
+            builder.RegisterType<PeerReputationResponseObserver>().As<IRpcResponseObserver>();
+            builder.RegisterType<RemovePeerResponseObserver>().As<IRpcResponseObserver>();
+            builder.RegisterType<SignMessageResponseObserver>().As<IRpcResponseObserver>();
+            builder.RegisterType<TransferFileBytesResponseObserver>().As<IRpcResponseObserver>();
+            builder.RegisterType<VerifyMessageResponseObserver>().As<IRpcResponseObserver>();
         }
     }
 }
