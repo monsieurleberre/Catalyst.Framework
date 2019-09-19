@@ -30,7 +30,7 @@ namespace Catalyst.Core.Lib.Extensions
     {
         public static string AsBase32Address(this Multihash multihash)
         {
-            var result = Base32.Rfc4648.Encode(multihash.ToBytes(), false).ToLowerInvariant();
+            var result = multihash.ToString(Multiformats.Base.MultibaseEncoding.Base58Btc);
             return result;
         }
     }

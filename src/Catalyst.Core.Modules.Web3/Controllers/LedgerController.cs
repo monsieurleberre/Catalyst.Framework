@@ -52,7 +52,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers
         public async Task<JsonResult> GetLatestDelta(DateTime? asOf)
         {
             var latest = _hashProvider.GetLatestDeltaHash(asOf?.ToUniversalTime());
-            var dfsTarget = latest.ToBytes().ToBase32();
+            var dfsTarget = latest.ToString(Multiformats.Base.MultibaseEncoding.Base58Btc);
             byte[] dfsContent = null;
             try
             {

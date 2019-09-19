@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using Catalyst.Core.Lib.Config;
 using Google.Protobuf;
 using Multiformats.Hash;
 
@@ -38,7 +39,8 @@ namespace Catalyst.Core.Lib.Extensions
 
         public static string AsBase32Address(this ByteString byteString)
         {
-            return AsMultihash(byteString).AsBase32Address();
+            var hash = Multihash.Sum(Constants.HashAlgorithmType, byteString.ToByteArray());
+            return hash.ToString(Multiformats.Base.MultibaseEncoding.Base58Btc);
         }
     }
 }
