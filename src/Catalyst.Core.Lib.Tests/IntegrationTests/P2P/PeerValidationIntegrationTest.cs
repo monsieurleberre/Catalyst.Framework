@@ -57,7 +57,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
         public PeerValidationIntegrationTest(ITestOutputHelper output) : base(output)
         {
-            _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot);
+            _peerSettings = new PeerSettings( ContainerProvider.ConfigurationRoot);
 
             var sender =
                 PeerIdHelper.GetPeerId("sender", _peerSettings.BindAddress, _peerSettings.Port);
