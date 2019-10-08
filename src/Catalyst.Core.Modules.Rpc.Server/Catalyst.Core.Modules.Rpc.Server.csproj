@@ -10,7 +10,7 @@
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
-      <ProjectReference Include="..\..\..\multiformats-dotnet\MultiFormats.MultiHash\src\MultiFormats.MultiHash.csproj" />
+      <ProjectReference Include="..\..\submodules\multiformats-dotnet\MultiFormats.MultiHash\src\MultiFormats.MultiHash.csproj" />
       <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj"   />
       <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj"   />
     </ItemGroup>

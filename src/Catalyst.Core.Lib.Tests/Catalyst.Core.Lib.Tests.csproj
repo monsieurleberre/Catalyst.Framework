@@ -42,31 +42,5 @@
       <ProjectReference Include="..\Catalyst.Modules.Repository.MongoDb\Catalyst.Modules.Repository.MongoDb.csproj" />
       <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
-    <ItemGroup>
-      <_UnmanagedRegistrationCache Remove="obj\Catalyst.Core.Lib.Tests.csproj.UnmanagedRegistration.cache" />
-    </ItemGroup>
-    <ItemGroup>
-      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp3.0\Catalyst.Core.Lib.Tests.csproj.ResolveComReference.cache" />
-    </ItemGroup>
-    <ItemGroup>
-      <IntermediateAssembly Remove="obj\Debug\netcoreapp3.0\Catalyst.Core.Lib.Tests.dll" />
-    </ItemGroup>
-    <ItemGroup>
-      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp3.0\Catalyst.Core.Lib.Tests.pdb" />
-    </ItemGroup>
-    <ItemGroup>
-      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp3.0\Catalyst.Core.Lib.Tests.dll" />
-    </ItemGroup>
-    <ItemGroup>
-      <ApplicationManifest Remove="obj\Debug\netcoreapp3.0\Native.Catalyst.Core.Lib.Tests.manifest" />
-    </ItemGroup>
-    <ItemGroup>
-      <DeployManifest Remove="obj\Debug\netcoreapp3.0\Catalyst.Core.Lib.Tests.application" />
-    </ItemGroup>
-    <ItemGroup>
-      <ClsidMap Remove="obj\Debug\netcoreapp3.0\Catalyst.Core.Lib.Tests.clsidmap" />
-    </ItemGroup>
-    <ItemGroup>
-      <RegFreeComManifest Remove="obj\Debug\netcoreapp3.0\Catalyst.Core.Lib.Tests.X.manifest" />
-    </ItemGroup>
+
 </Project>

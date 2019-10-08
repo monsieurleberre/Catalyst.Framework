@@ -13,9 +13,9 @@
     
     <!-- catalyst deps -->
     <ItemGroup>
-        <ProjectReference Include="..\..\..\libp2p-dotnet\src\PeerTalk.csproj"    />
-        <ProjectReference Include="..\..\..\multiformats-dotnet\MultiFormats.MultiAddress\src\MultiFormats.MultiAddress.csproj"    />
-        <ProjectReference Include="..\..\..\multiformats-dotnet\MultiFormats.MultiHash\src\MultiFormats.MultiHash.csproj"    />
+        <ProjectReference Include="..\..\submodules\libp2p-dotnet\src\PeerTalk.csproj"    />
+        <ProjectReference Include="..\..\submodules\multiformats-dotnet\MultiFormats.MultiAddress\src\MultiFormats.MultiAddress.csproj"    />
+        <ProjectReference Include="..\..\submodules\multiformats-dotnet\MultiFormats.MultiHash\src\MultiFormats.MultiHash.csproj"    />
         <ProjectReference Include="..\..\submodules\net-ipfs-engine\src\Ipfs.Core.Lib.csproj" />
         <ProjectReference Include="..\..\submodules\net-ipfs-http-gateway\src\Ipfs.Gateway.csproj" />
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj"    />
