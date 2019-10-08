@@ -29,7 +29,7 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Ipfs.Registry;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 

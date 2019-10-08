@@ -30,9 +30,8 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Core.Lib.Config;
 using Dawn;
-using Ipfs;
-using Ipfs.Registry;
 using Multiformats.Hash.Algorithms;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Dfs
 {

@@ -27,21 +27,21 @@
                 "default": "inMemoryNoCaching",
                 "inMemory": {
                     "factory": "SharpRepository.InMemoryRepository.InMemoryConfigRepositoryFactory, SharpRepository.InMemoryRepository"
-                },
+                }
                 //"mongoDb": {
                 //    "factory": "SharpRepository.MongoDbRepository.MongoDbConfigRepositoryFactory, SharpRepository.MongoDbRepository",
                 //    "connectionString": "mongodb:://127.0.0.1"
                 //},
-                "efCore": {
-                    "factory": "SharpRepository.EfCoreRepository.EfCoreConfigRepositoryFactory, SharpRepository.EfCoreRepository",
-                    "connectionString": "", // optional, you can configure it with dependency resolver
-                    "dbContextType": "EfCoreContext, Catalyst.Core.Lib.Repository" // optional, you can configure it with dependency resolver
-                },
-                "inMemoryNoCaching": {
-                    "factory": "SharpRepository.InMemoryRepository.InMemoryConfigRepositoryFactory, SharpRepository.InMemoryRepository",
-                    "cachingStrategy": "none",
-                    "cachingProvider": "noCachingProvider"
-                }
+//                "efCore": {
+//                    "factory": "SharpRepository.EfCoreRepository.EfCoreConfigRepositoryFactory, SharpRepository.EfCoreRepository",
+//                    "connectionString": "", // optional, you can configure it with dependency resolver
+//                    "dbContextType": "EfCoreContext, Catalyst.Core.Lib.Repository" // optional, you can configure it with dependency resolver
+//                },
+//                "inMemoryNoCaching": {
+//                    "factory": "SharpRepository.InMemoryRepository.InMemoryConfigRepositoryFactory, SharpRepository.InMemoryRepository",
+//                    "cachingStrategy": "none",
+//                    "cachingProvider": "noCachingProvider"
+//                }
             },
             "cachingProviders": {
                 "default": "inMemoryProvider",

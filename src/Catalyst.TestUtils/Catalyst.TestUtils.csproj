@@ -22,13 +22,31 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Catalyst.Core.Modules.Consensus\Catalyst.Core.Modules.Consensus.csproj" />
-      <ProjectReference Include="..\Catalyst.Core.Modules.Keystore\Catalyst.Core.Modules.Keystore.csproj" />
-      <ProjectReference Include="..\Catalyst.Core.Modules.Ledger\Catalyst.Core.Modules.Ledger.csproj" />
-      <ProjectReference Include="..\Catalyst.Core.Modules.P2P.Discovery.Hastings\Catalyst.Core.Modules.P2P.Discovery.Hastings.csproj" />
+      <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj"    />
+      <ProjectReference Include="..\Catalyst.Core.Modules.Consensus\Catalyst.Core.Modules.Consensus.csproj"    />
+      <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj"    />
+      <ProjectReference Include="..\Catalyst.Core.Modules.Keystore\Catalyst.Core.Modules.Keystore.csproj"    />
+      <ProjectReference Include="..\Catalyst.Core.Modules.Ledger\Catalyst.Core.Modules.Ledger.csproj"    />
+      <ProjectReference Include="..\Catalyst.Core.Modules.P2P.Discovery.Hastings\Catalyst.Core.Modules.P2P.Discovery.Hastings.csproj"    />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="Serilog" Version="2.8.0" />
-      <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.0.7.3" />
+        <PackageReference Include="Common.Logging" Version="3.4.1" />
+        <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1"    />
+        <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.0.7.3"    />
+        <PackageReference Include="SharpZipLib" Version="1.2.0"    />
+        <PackageReference Include="Autofac.Configuration" Version="4.1.0"    />
+        <PackageReference Include="AutofacSerilogIntegration" Version="2.0.0"    />
+        <PackageReference Include="AutoMapper" Version="9.0.0"    />
+        <PackageReference Include="DotNetty.Codecs" Version="0.6.0"    />
+        <PackageReference Include="DotNetty.Codecs.Protobuf" Version="0.6.0"    />
+        <PackageReference Include="DotNetty.Handlers" Version="0.6.0"    />
+        <PackageReference Include="MongoDB.Bson" Version="2.7.0"    />
+        <PackageReference Include="Multiformats.Hash" Version="1.5.0"    />
+        <PackageReference Include="Nethereum.RLP" Version="3.4.0"    />
+        <PackageReference Include="Polly" Version="7.1.0"    />
+        <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.0.4.2"    />
+        <PackageReference Include="SharpRepository.XmlRepository" Version="2.0.1-alpha3"    />
+        <PackageReference Include="SimpleBase" Version="1.3.1"    />
+        <PackageReference Include="DnsClient" Version="1.2.0"    />
     </ItemGroup>
 </Project>

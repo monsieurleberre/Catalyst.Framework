@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Text;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
@@ -64,7 +63,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         public async Task GetDeltaRequestObserver_Should_Not_Hit_The_Cache_On_Invalid_Hash()
         {
             var invalidHash = "abcd";
-            var invalidHashBytes = Encoding.UTF8.GetBytes(invalidHash);
+            var invalidHashBytes = System.Text.Encoding.UTF8.GetBytes(invalidHash);
             CreateAndExpectDeltaFromCache(invalidHash);
 
             var observable = CreateStreamWithDeltaRequest(invalidHashBytes);
@@ -119,7 +118,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
         private static Multihash GetMultiHash(string content)
         {
-            var multiHash = Encoding.UTF8.GetBytes(content).ComputeMultihash(Constants.HashAlgorithm);
+            var multiHash = System.Text.Encoding.UTF8.GetBytes(content).ComputeMultihash(Constants.HashAlgorithm);
             return multiHash;
         }
 

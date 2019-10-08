@@ -11,12 +11,21 @@
     <Import Project="../Common.TestProjects.props" />
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\libp2p-dotnet\src\PeerTalk.csproj" />
+        <ProjectReference Include="..\..\submodules\net-ipfs-engine\src\Ipfs.Core.Lib.csproj" />
+      <ProjectReference Include="..\..\..\multiformats-dotnet\MultiFormats.MultiHash\src\MultiFormats.MultiHash.csproj" />
+      <ProjectReference Include="..\..\submodules\net-ipfs-http-gateway\src\Ipfs.Gateway.csproj" />
+      <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
+      <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Modules.Dfs\Catalyst.Core.Modules.Dfs.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Modules.Rpc.Server\Catalyst.Core.Modules.Rpc.Server.csproj" />
       <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
       <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
+      <PackageReference Include="Multiformats.Base" Version="2.0.1" />
+      <PackageReference Include="Multiformats.Hash" Version="1.5.0" />
     </ItemGroup>
 </Project>

@@ -23,7 +23,6 @@
 
 using System.IO;
 using System.Net;
-using System.Text;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
@@ -45,7 +44,7 @@ namespace Catalyst.Core.Lib.Extensions
             return stream;
         }
         
-        public static byte[] ToUtf8Bytes(this string @string) => Encoding.UTF8.GetBytes(@string);
+        public static byte[] ToUtf8Bytes(this string @string) => System.Text.Encoding.UTF8.GetBytes(@string);
 
         public static Multihash ComputeUtf8Multihash(this string content, IMultihashAlgorithm algorithm)
         {

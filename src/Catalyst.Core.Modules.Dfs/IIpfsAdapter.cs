@@ -21,18 +21,34 @@
 
 #endregion
 
-using Autofac;
-using Catalyst.Abstractions.Dfs;
+using System;
+using Ipfs.Abstractions;
 using Ipfs.Core.Lib;
+using Ipfs.Core.Lib;
+using PeerTalk;
 
 namespace Catalyst.Core.Modules.Dfs
 {
-    public class DfsModule : Module
+    public interface IIpfsAdapter : ICoreApi, IDisposable
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<IpfsAdapter>().As<IIpfsAdapter>().As<ICoreApi>().SingleInstance();
-            builder.RegisterType<Dfs>().As<IDfs>().SingleInstance();
-        }  
+        IBitswapApi Bitswap { get; }
+        IBlockApi Block { get; }
+        IBlockRepositoryApi BlockRepository { get; }
+        IBootstrapApi Bootstrap { get; }
+        IConfigApi Config { get; }
+        IpfsEngineOptions Options { get; }
+        IDagApi Dag { get; }
+        IDhtApi Dht { get; }
+        IDnsApi Dns { get; }
+        IFileSystemApi FileSystem { get; }
+        IGenericApi Generic { get; }
+        IKeyApi Key { get; }
+        INameApi Name { get; }
+        IObjectApi Object { get; }
+        IPinApi Pin { get; }
+        IPubSubApi PubSub { get; }
+        IStatsApi Stats { get; }
+        ISwarmApi Swarm { get; }
+        void Dispose();
     }
 }

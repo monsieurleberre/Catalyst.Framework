@@ -61,7 +61,8 @@ namespace Catalyst.Core.Lib.Network
             var defaultedIpEchoUrls = ipEchoUrls ?? DefaultIpEchoUrls.ToObservable();
 
             var echoedIp = await defaultedIpEchoUrls
-               .Select((url, i) => Observable.FromAsync(async () => await TryGetExternalIpFromEchoUrlAsync(url).ConfigureAwait(false)))
+               .Select((url, i) =>
+                    Observable.FromAsync(async () => await TryGetExternalIpFromEchoUrlAsync(url).ConfigureAwait(false)))
                .Merge()
                .FirstAsync(t => t != null);
 
@@ -69,7 +70,8 @@ namespace Catalyst.Core.Lib.Network
         }
 
         /// <summary>
-        ///     Creates a standardised format byte array that can handle a IPv6 address or an IPv4 with leading bytes padded with 0x0
+        ///     Creates a standardised format byte array that can handle a IPv6 address or an IPv4 with leading bytes padded with
+        ///     0x0
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
@@ -79,13 +81,9 @@ namespace Catalyst.Core.Lib.Network
             var ipBytes = address.GetAddressBytes();
 
             if (ipBytes.Length == 4)
-            {
                 Buffer.BlockCopy(ipBytes, 0, ipChunk, 12, 4);
-            }
             else
-            {
                 ipChunk = ipBytes;
-            }
 
             Logger.Verbose(string.Join(" ", ipChunk));
 
@@ -139,10 +137,7 @@ namespace Catalyst.Core.Lib.Network
         /// <exception cref="ArgumentNullException"></exception>
         internal static IPAddress ValidateIp(string ip)
         {
-            if (string.IsNullOrEmpty(ip))
-            {
-                throw new ArgumentNullException(nameof(ip));
-            }
+            if (string.IsNullOrEmpty(ip)) throw new ArgumentNullException(nameof(ip));
 
             return IPAddress.Parse(ip);
         }

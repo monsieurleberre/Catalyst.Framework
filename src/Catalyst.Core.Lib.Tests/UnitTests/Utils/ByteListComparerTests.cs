@@ -22,7 +22,6 @@
 #endregion
 
 using System.Linq;
-using System.Text;
 using Catalyst.Core.Lib.Util;
 using FluentAssertions;
 using Xunit;
@@ -34,8 +33,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
         [Fact]
         public void ByteListComparer_should_return_0_on_same_list()
         {
-            var list1 = Encoding.UTF8.GetBytes("hello");
-            var list2 = Encoding.UTF8.GetBytes("hello");
+            var list1 = System.Text.Encoding.UTF8.GetBytes("hello");
+            var list2 = System.Text.Encoding.UTF8.GetBytes("hello");
 
             ByteUtil.ByteListMinSizeComparer.Default.Compare(list1, list2).Should().Be(0);
         }
@@ -43,8 +42,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
         [Fact]
         public void ByteListComparer_should_return_0_on_same_beginning_of_list()
         {
-            var list1 = Encoding.UTF8.GetBytes("hello");
-            var list2 = Encoding.UTF8.GetBytes("hello").Concat(Encoding.UTF8.GetBytes("world")).ToList();
+            var list1 = System.Text.Encoding.UTF8.GetBytes("hello");
+            var list2 = System.Text.Encoding.UTF8.GetBytes("hello").Concat(System.Text.Encoding.UTF8.GetBytes("world")).ToList();
 
             ByteUtil.ByteListMinSizeComparer.Default.Compare(list1, list2).Should().Be(0);
         }
@@ -52,8 +51,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
         [Fact]
         public void ByteListComparer_should_not_return_0_on_different_beginning_of_list()
         {
-            var list1 = Encoding.UTF8.GetBytes("hello");
-            var list2 = Encoding.UTF8.GetBytes("world").Concat(Encoding.UTF8.GetBytes("hello")).ToList();
+            var list1 = System.Text.Encoding.UTF8.GetBytes("hello");
+            var list2 = System.Text.Encoding.UTF8.GetBytes("world").Concat(System.Text.Encoding.UTF8.GetBytes("hello")).ToList();
 
             ByteUtil.ByteListMinSizeComparer.Default.Compare(list1, list2).Should().NotBe(0);
         }

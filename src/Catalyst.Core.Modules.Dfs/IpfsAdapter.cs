@@ -25,17 +25,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Common.Logging;
 using Common.Logging.Serilog;
-using Ipfs;
-using Ipfs.CoreApi;
-using Ipfs.Engine;
+using Ipfs.Abstractions;
+using Ipfs.Core.Lib;
+using Ipfs.Core.Lib;
+using PeerTalk;
 using PeerTalk.Cryptography;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiAddress;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Dfs
 {

@@ -69,7 +69,7 @@ namespace Catalyst.Core.Lib.Network
 
             return await QueryAsync(hostname, QueryType.TXT).ConfigureAwait(false);
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -81,11 +81,11 @@ namespace Catalyst.Core.Lib.Network
             {
                 var dnsQueryAnswer = await GetTxtRecordsAsync(seedServer).ConfigureAwait(false);
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
-        
+
                 Guard.Argument(answerSection.EscapedText).NotNull().Count(1);
                 answerSection.EscapedText.ToList()
                    .ForEach(stringPid => peers.Add(stringPid.ParseHexStringTo<PeerId>()));
-        
+
                 Guard.Argument(peers).MinCount(1);
             });
             return peers;

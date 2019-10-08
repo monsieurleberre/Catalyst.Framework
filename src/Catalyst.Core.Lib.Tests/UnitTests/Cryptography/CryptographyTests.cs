@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Text;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Cryptography.BulletProofs.Exceptions;
@@ -51,8 +50,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         {
             var key1 = _context.GeneratePrivateKey();
 
-            var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
-            var signingContext = Encoding.UTF8.GetBytes("Testing testing 1 2 3 context");
+            var data = System.Text.Encoding.UTF8.GetBytes("Testing testing 1 2 3");
+            var signingContext = System.Text.Encoding.UTF8.GetBytes("Testing testing 1 2 3 context");
             var signature = _context.Sign(key1, data, signingContext);
 
             var key2 = _context.GeneratePrivateKey();
@@ -77,8 +76,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         public void TestSigningVerification()
         {
             var privateKey = _context.GeneratePrivateKey();
-            var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
-            var signingContext = Encoding.UTF8.GetBytes("Testing testing 1 2 3 context");
+            var data = System.Text.Encoding.UTF8.GetBytes("Testing testing 1 2 3");
+            var signingContext = System.Text.Encoding.UTF8.GetBytes("Testing testing 1 2 3 context");
             var signature = _context.Sign(privateKey, data, signingContext);
 
             _context.Verify(signature, data, signingContext)
@@ -90,8 +89,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         {
             var privateKey = _context.GeneratePrivateKey();
             var publicKey = _context.GetPublicKeyFromPrivateKey(privateKey);
-            var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
-            var signingContext = Encoding.UTF8.GetBytes("Testing testing 1 2 3 context");
+            var data = System.Text.Encoding.UTF8.GetBytes("Testing testing 1 2 3");
+            var signingContext = System.Text.Encoding.UTF8.GetBytes("Testing testing 1 2 3 context");
             var signature = _context.Sign(privateKey, data, signingContext);
 
             var blob = _context.ExportPublicKey(publicKey);
@@ -106,9 +105,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         public void Does_Verify_Fail_With_Incorrect_Signing_Context()
         {
             var privateKey = _context.GeneratePrivateKey();
-            var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
-            var signingContext = Encoding.UTF8.GetBytes("Testing testing 1 2 3 context");
-            var incorrectSigningContext = Encoding.UTF8.GetBytes("This is a different string");
+            var data = System.Text.Encoding.UTF8.GetBytes("Testing testing 1 2 3");
+            var signingContext = System.Text.Encoding.UTF8.GetBytes("Testing testing 1 2 3 context");
+            var incorrectSigningContext = System.Text.Encoding.UTF8.GetBytes("This is a different string");
  
             var signature = _context.Sign(privateKey, data, signingContext);
 
@@ -124,8 +123,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             string invalidSignature = "mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIA==";
             byte[] signatureBytes = Convert.FromBase64String(invalidSignature);
             var invalidSig = _context.GetSignatureFromBytes(signatureBytes, publicKey.Bytes);
-            byte[] message = Encoding.UTF8.GetBytes("fa la la la");
-            Action action = () => { _context.Verify(invalidSig, message, Encoding.UTF8.GetBytes("")); };
+            byte[] message = System.Text.Encoding.UTF8.GetBytes("fa la la la");
+            Action action = () => { _context.Verify(invalidSig, message, System.Text.Encoding.UTF8.GetBytes("")); };
             action.Should().Throw<SignatureException>();
         }
 
@@ -156,7 +155,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
                 new ArraySegment<byte>(signatureMessageBytes, 0, _context.SignatureLength);
             var publicKeyBytes = publicKey.HexToByteArray();
             var messageBytes = message.HexToByteArray();
-            var contextBytes = Encoding.UTF8.GetBytes(context);
+            var contextBytes = System.Text.Encoding.UTF8.GetBytes(context);
             var signature = _context.GetSignatureFromBytes(signatureBytes.Array, publicKeyBytes);
             
             _context.Verify(signature, messageBytes, contextBytes).Should().Be(expectedResult);

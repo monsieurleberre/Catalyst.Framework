@@ -26,9 +26,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Lib.Config;
-using Ipfs;
-using Ipfs.CoreApi;
+using Ipfs.Core.Lib;
+using Ipfs.Core.Lib.CoreApi;
+using Ipfs.Core.Lib;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Dfs
 {

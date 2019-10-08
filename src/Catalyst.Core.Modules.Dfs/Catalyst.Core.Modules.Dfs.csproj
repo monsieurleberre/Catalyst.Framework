@@ -10,20 +10,25 @@
     </PropertyGroup>
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
+    
+    <!-- catalyst deps -->
     <ItemGroup>
-        <ProjectReference Include="..\..\submodules\net-ipfs-core\src\IpfsCore.csproj" />
-        <ProjectReference Include="..\..\submodules\net-ipfs-engine\src\IpfsEngine.csproj" />
-        <ProjectReference Include="..\..\submodules\net-ipfs-http-gateway\src\HttpGateway.csproj" />
-        <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
-        <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
+        <ProjectReference Include="..\..\..\libp2p-dotnet\src\PeerTalk.csproj"    />
+        <ProjectReference Include="..\..\..\multiformats-dotnet\MultiFormats.MultiAddress\src\MultiFormats.MultiAddress.csproj"    />
+        <ProjectReference Include="..\..\..\multiformats-dotnet\MultiFormats.MultiHash\src\MultiFormats.MultiHash.csproj"    />
+        <ProjectReference Include="..\..\submodules\net-ipfs-engine\src\Ipfs.Core.Lib.csproj" />
+        <ProjectReference Include="..\..\submodules\net-ipfs-http-gateway\src\Ipfs.Gateway.csproj" />
+        <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj"    />
+        <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj"    />
     </ItemGroup>
 
+    <!-- private deps -->
     <ItemGroup>
-        <PackageReference Include="Common.Logging.Serilog" Version="4.3.6" />
-        <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-        <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.2.0" />
+        <PackageReference Include="Multiformats.Hash" Version="1.5.0"    />
+        <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0"    />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0"    />
+        <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0"    />
+        <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.2.0"    />
     </ItemGroup>
 
 </Project>

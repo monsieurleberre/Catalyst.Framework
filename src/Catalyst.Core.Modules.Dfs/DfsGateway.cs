@@ -22,9 +22,8 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.Dfs;
-using Ipfs.CoreApi;
-using Ipfs.HttpGateway;
+using Ipfs.Core.Lib;
+using Ipfs.GateWay;
 
 namespace Catalyst.Core.Modules.Dfs
 {

@@ -35,6 +35,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
+using PeerTalk;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {

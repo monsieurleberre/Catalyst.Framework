@@ -21,32 +21,26 @@
 
 #endregion
 
-using System;
-using Ipfs.CoreApi;
-using Ipfs.Engine;
+using Catalyst.Abstractions.Dfs;
+using Ipfs.GateWay;
 
-namespace Catalyst.Abstractions.Dfs
+namespace Catalyst.Core.Modules.Dfs
 {
-    public interface IIpfsAdapter : ICoreApi, IDisposable
+    /// <summary>
+    ///   Provides read-only access to the distribute files system via HTTP.
+    /// </summary>
+    /// <seealso cref="IDfs"/>
+    public interface IDfsGateway
     {
-        IBitswapApi Bitswap { get; }
-        IBlockApi Block { get; }
-        IBlockRepositoryApi BlockRepository { get; }
-        IBootstrapApi Bootstrap { get; }
-        IConfigApi Config { get; }
-        IpfsEngineOptions Options { get; }
-        IDagApi Dag { get; }
-        IDhtApi Dht { get; }
-        IDnsApi Dns { get; }
-        IFileSystemApi FileSystem { get; }
-        IGenericApi Generic { get; }
-        IKeyApi Key { get; }
-        INameApi Name { get; }
-        IObjectApi Object { get; }
-        IPinApi Pin { get; }
-        IPubSubApi PubSub { get; }
-        IStatsApi Stats { get; }
-        ISwarmApi Swarm { get; }
-        void Dispose();
+        GatewayHost Gateway { get; }
+        
+        /// <summary>
+        ///   Gets the URL of DFS content.
+        /// </summary>
+        /// <param name="id">The unique ID of the content in the DFS.</param>
+        /// <returns>
+        ///   The URL of the DFS <paramref name="id"/>.
+        /// </returns>
+        string ContentUrl(string id);
     }
 }

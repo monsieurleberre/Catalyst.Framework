@@ -23,7 +23,6 @@
 
 using System;
 using System.Net;
-using System.Text;
 using Catalyst.Core.Lib.Util;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -54,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
         [Fact]
         public void Check_Convertibility_Should_Fail()
         {
-            var ipAddressBytes = Encoding.ASCII.GetBytes("FalseData_Fake_Ip_Address_198.0.yplor");
+            var ipAddressBytes = System.Text.Encoding.ASCII.GetBytes("FalseData_Fake_Ip_Address_198.0.yplor");
         
             _ipAddressConverter.CanConvert(ipAddressBytes.GetType()).Should().BeFalse();
         }

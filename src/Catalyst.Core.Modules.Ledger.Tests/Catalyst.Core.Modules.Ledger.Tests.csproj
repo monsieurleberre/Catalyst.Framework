@@ -11,7 +11,14 @@
     <Import Project="../Common.TestProjects.props" />
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
+        <PackageReference Include="Multiformats.Hash" Version="1.5.0" />
+        <PackageReference Include="SharpRepository.Repository" Version="2.0.4.6" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />
       <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
+      <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Modules.Ledger\Catalyst.Core.Modules.Ledger.csproj" />
       <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>

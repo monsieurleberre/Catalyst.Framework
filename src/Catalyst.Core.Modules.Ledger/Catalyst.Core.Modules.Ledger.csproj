@@ -10,11 +10,13 @@
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
-        <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
-        <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
-        <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj" />
+        <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj"   />
+        <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj"   />
+        <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj"   />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj"   />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
+        <PackageReference Include="Multiformats.Hash" Version="1.5.0"   />
+        <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1"   />
     </ItemGroup>
 </Project>

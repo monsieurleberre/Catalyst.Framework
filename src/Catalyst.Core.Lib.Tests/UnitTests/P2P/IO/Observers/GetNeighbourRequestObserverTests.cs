@@ -64,7 +64,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             store.Add(peer);
             store.FindAll(Arg.Any<Specification<Peer>>()).Returns(peer);
         }
-
+        
         [Fact]
         public async Task Can_Process_GetNeighbourRequest_Correctly()
         {

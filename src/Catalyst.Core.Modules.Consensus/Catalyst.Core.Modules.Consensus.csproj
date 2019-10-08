@@ -9,12 +9,24 @@
     </PropertyGroup>
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
+
+    <!-- nethermind deps -->
     <ItemGroup>
-        <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
-        <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
+        <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj"   />
     </ItemGroup>
+    
+    <!-- catalyst deps -->
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="4.8.1" />
-        <PackageReference Include="Nito.Comparers.Core" Version="6.0.0" />
+        <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj"   />
+        <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj"   />
+    </ItemGroup>
+    
+    <!-- private deps -->
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.0.0"   />
+        <PackageReference Include="Multiformats.Hash" Version="1.5.0"   />
+        <PackageReference Include="Nethereum.Hex" Version="3.4.0"   />
+        <PackageReference Include="Nito.Comparers.Core" Version="6.0.0"   />
+        <PackageReference Include="SharpRepository.Repository" Version="2.0.4.6" />
     </ItemGroup>
 </Project>

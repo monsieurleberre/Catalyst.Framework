@@ -9,10 +9,18 @@
     <PropertyGroup>
         <RootNamespace>Catalyst.Modules.POA.Consensus</RootNamespace>
     </PropertyGroup>
+    <Import Project="../Common.Packable.props" />
+    <Import Project="../Common.Projects.props" />
     <ItemGroup>
-        <ProjectReference Include="..\Catalyst.Core.Modules.Consensus\Catalyst.Core.Modules.Consensus.csproj" />
-        <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
-        <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
-        <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Consensus\Catalyst.Core.Modules.Consensus.csproj"   />
+        <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj"   />
+        <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj"   />
+        <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj"   />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Google.Protobuf" Version="3.10.0"   />
+      <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.0.0"   />
+      <PackageReference Include="Multiformats.Hash" Version="1.5.0"   />
+      <PackageReference Include="SharpRepository.Repository" Version="2.0.4.6" />
     </ItemGroup>
 </Project>

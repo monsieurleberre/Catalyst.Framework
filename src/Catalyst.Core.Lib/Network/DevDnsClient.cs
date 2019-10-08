@@ -1,4 +1,3 @@
-
 #region LICENSE
 
 /**
@@ -39,9 +38,9 @@ namespace Catalyst.Core.Lib.Network
 {
     public sealed class DevDnsClient : IDns
     {
-        private readonly IList<string> _seedServers;
         private readonly IList<string> _dnsQueryAnswerValues;
         private readonly IEnumerable<PeerId> _peerIds;
+        private readonly IList<string> _seedServers;
 
         public DevDnsClient(IPeerSettings peerSettings)
         {
@@ -69,11 +68,8 @@ namespace Catalyst.Core.Lib.Network
             };
             return await Task.FromResult<IDnsQueryResponse>(devDnsQueryResponse).ConfigureAwait(false);
         }
-        
+
         /// <inheritdoc />
-        public IEnumerable<PeerId> GetSeedNodesFromDns(IEnumerable<string> seedServers)
-        {
-            return _peerIds;
-        }
+        public IEnumerable<PeerId> GetSeedNodesFromDns(IEnumerable<string> seedServers) { return _peerIds; }
     }
 }

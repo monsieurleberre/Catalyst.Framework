@@ -85,7 +85,7 @@ namespace Catalyst.TestUtils
     {
         private readonly ITestOutputHelper _output;
         public TaskHelperTests(ITestOutputHelper output) { _output = output; }
-
+        
         [Fact]
         public async Task WaitFor_Should_Throw_Descriptive_Message_After_Timeout()
         {

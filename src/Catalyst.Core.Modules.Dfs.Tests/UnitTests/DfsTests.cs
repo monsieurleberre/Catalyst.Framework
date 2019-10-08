@@ -31,9 +31,13 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using FluentAssertions;
 using Ipfs;
-using Ipfs.CoreApi;
+using Ipfs.Abstractions;
+using Ipfs.Core.Lib.CoreApi;
+using Ipfs.Core.Lib;
 using NSubstitute;
+using PeerTalk;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests

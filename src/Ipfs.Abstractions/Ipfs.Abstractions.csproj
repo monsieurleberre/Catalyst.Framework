@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\libp2p-dotnet\src\PeerTalk.csproj" />
+      <ProjectReference Include="..\..\..\multiformats-dotnet\MultiFormats.MultiAddress\src\MultiFormats.MultiAddress.csproj" />
+      <ProjectReference Include="..\..\..\multiformats-dotnet\MultiFormats.MultiHash\src\MultiFormats.MultiHash.csproj" />
+    </ItemGroup>
+
+</Project>

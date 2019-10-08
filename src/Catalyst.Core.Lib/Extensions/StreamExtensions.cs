@@ -22,7 +22,6 @@
 #endregion
 
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -37,7 +36,7 @@ namespace Catalyst.Core.Lib.Extensions
                 stream.Seek(0, SeekOrigin.Begin);
             }
 
-            using (var reader = new StreamReader(stream, Encoding.UTF8,
+            using (var reader = new StreamReader(stream, System.Text.Encoding.UTF8,
                 true, 4096, leaveOpen))
             {
                 return reader.ReadToEnd();

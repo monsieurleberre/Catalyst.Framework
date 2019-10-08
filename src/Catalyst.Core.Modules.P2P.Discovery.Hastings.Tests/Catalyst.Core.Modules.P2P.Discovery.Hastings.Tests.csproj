@@ -12,8 +12,17 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
+      <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Modules.P2P.Discovery.Hastings\Catalyst.Core.Modules.P2P.Discovery.Hastings.csproj" />
       <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="DnsClient" Version="1.2.0" />
+      <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
+      <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.0.0" />
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
+      <PackageReference Include="SharpRepository.Repository" Version="2.0.4.6" />
     </ItemGroup>
 
 </Project>

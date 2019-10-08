@@ -138,7 +138,7 @@ namespace Catalyst.TestUtils
             var logger = loggerConfiguration.CreateLogger();
             ContainerBuilder.RegisterLogger(logger);
 
-            if (Log.Logger == Logger.None)
+            // if (Log.Logger == Logger.None)
             {
                 Log.Logger = logger;
             }

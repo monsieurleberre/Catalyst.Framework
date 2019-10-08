@@ -103,7 +103,7 @@ namespace Catalyst.TestUtils
             _stringsInRandomOrder = new[] {"A", "a", "Z", "b", "r", "d"}
                .Select(x => new StringWrapper(x));
         }
-
+        
         [Fact]
         public void NotBeInDescendingOrder_should_only_throw_when_in_descending_order()
         {
