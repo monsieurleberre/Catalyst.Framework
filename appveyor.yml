@@ -1,0 +1,40 @@
+for:
+-
+  branches:
+    only:
+      - master
+
+  environment:
+    git_token:
+      secure: NeX5NCOUXsCLc1UjTJjqB9F02FZ8Wq0VsxqTXC8kBdyK6zjxjebrf/9Da2sY1Kql
+
+configuration: Release
+os: Visual Studio 2017
+
+init:
+  - git config --global core.autocrlf input
+  - git config --global credential.helper store
+  - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:git_token):x-oauth-basic@github.com`n"
+  - git config --global user.email "noreply@emanon.org"
+  - git config --global user.name "Appveyor CI"
+
+cache:
+  - '%APPDATA%\npm-cache'               # npm cache
+  - '%USERPROFILE%\.nuget\packages'     # nuget cache
+
+environment:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+pull_requests:
+  do_not_increment_build_number: true
+
+build_script:
+  - dotnet build -c Release
+
+after_test:
+    - choco install docfx -y --version 2.42 --force
+    - docfx src\Catalyst.Documentation\docfx.json --logLevel Warning --warningsAsErrors
+    - 7z a -tzip docs.zip doc\_site
+    - appveyor PushArtifact docs.zip
+    - if defined git_token npm install gh-pages@2.0 -g
+    - if defined git_token gh-pages -d doc\_site -m "new docs %GitVersion_FullSemVer%"
