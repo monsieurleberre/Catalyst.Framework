@@ -12,12 +12,14 @@ configuration: Release
 os: Visual Studio 2017
 
 init:
-  - git submodule init --update --recursive
   - git config --global core.autocrlf input
   - git config --global credential.helper store
   - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:git_token):x-oauth-basic@github.com`n"
   - git config --global user.email "noreply@emanon.org"
   - git config --global user.name "Appveyor CI"
+
+install:
+  - git submodule init --update --recursive
 
 cache:
   - '%APPDATA%\npm-cache'               # npm cache
